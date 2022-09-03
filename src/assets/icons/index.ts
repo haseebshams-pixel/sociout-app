@@ -8,6 +8,9 @@ const notification = require('./notification.png');
 const tabPlusIcon = require('./tabPlus.png');
 const homeActive = require('./homeActive.png');
 const homeInactive = require('./homeInactive.png');
+const showEye = require('./showeye.png');
+const hideEye = require('./hideeye.png');
+const user = require('./user.png');
 export {
   splashlogo,
   search,
@@ -19,4 +22,7 @@ export {
   notification,
   searchIcon,
   tabPlusIcon,
+  showEye,
+  hideEye,
+  user,
 };

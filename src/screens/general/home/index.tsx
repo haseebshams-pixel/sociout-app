@@ -1,20 +1,23 @@
 //import liraries
 import CustomText from '@components/customText';
 import Header from '@components/header';
+import PrimaryBtn from '@components/primaryBtn';
 import {HeaderComponent} from '@components/searchHeader';
 import Wrapper from '@components/wrapper';
+import {resetUser, setUser} from '@redux/reducers/userSlice';
 import {COLORS} from '@theme/colors';
 import {GST} from '@theme/globalStyles';
 import {HP, RF, WP} from '@theme/responsive';
 import React, {useState} from 'react';
 import {StatusBar, View} from 'react-native';
 import {Avatar} from 'react-native-elements';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {styles} from './styles';
 const {DARK_GRAY} = COLORS;
 // create a component
-const Notifications = ({route}: any) => {
+const Home = ({route}: any) => {
   const {user} = useSelector((state: any) => state.root.user);
+  const dispatch = useDispatch();
   const [value, setvalue] = useState<any>('');
   const ItemCard = (item: any) => {
     const image: any = item?.pictureUrl;
@@ -60,12 +63,17 @@ const Notifications = ({route}: any) => {
   return (
     <Wrapper>
       <StatusBar translucent barStyle={'dark-content'} />
-      <Header title={'Select communities'} />
-      <HeaderComponent searchHandler={setvalue} />
+      <Header title={'Home'} />
       <View style={{height: HP(2)}} />
-      <HeaderComponent searchHandler={setvalue} title={'location'} />
+      <PrimaryBtn
+        title="Log out"
+        onPress={() => {
+          dispatch(resetUser());
+          console.log('here');
+        }}
+      />
     </Wrapper>
   );
 };
 //make this component available to the app
-export default Notifications;
+export default Home;

@@ -13,7 +13,7 @@ import {useSelector} from 'react-redux';
 import {styles} from './styles';
 const {DARK_GRAY} = COLORS;
 // create a component
-const Home = ({route}: any) => {
+const Notifications = ({route}: any) => {
   const {user} = useSelector((state: any) => state.root.user);
   const [value, setvalue] = useState<any>('');
   const ItemCard = (item: any) => {
@@ -60,12 +60,9 @@ const Home = ({route}: any) => {
   return (
     <Wrapper>
       <StatusBar translucent barStyle={'dark-content'} />
-      <Header title={'Select communities'} />
-      <HeaderComponent searchHandler={setvalue} />
-      <View style={{height: HP(2)}} />
-      <HeaderComponent searchHandler={setvalue} title={'location'} />
+      <Header title={'Notifications'} />
     </Wrapper>
   );
 };
 //make this component available to the app
-export default Home;
+export default Notifications;

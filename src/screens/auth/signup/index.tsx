@@ -7,23 +7,22 @@ import PrimaryBtn from '@components/primaryBtn';
 import Wrapper from '@components/wrapper';
 import {RouteProp} from '@react-navigation/native';
 import {setUser} from '@redux/reducers/userSlice';
-import {registerUser} from '@services/AuthService';
-import {disableHandler, showToast} from '@services/helperService';
-import {navigate} from '@services/navService';
+import {signUpDisableHandler, showToast} from '@services/helperService';
 import {COLORS} from '@theme/colors';
 import {GST} from '@theme/globalStyles';
 import {RF} from '@theme/responsive';
-import {ANDROID} from '@utils/constants';
-import {ROUTES} from '@utils/routes';
 import {RegistrationVS} from '@utils/validations';
 import {Formik} from 'formik';
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 import {View} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import styles from './styles';
+import CustomDatePicker from '@components/customDatePicker';
+import {registerUser} from '@services/authService';
+
 const SIZE = 5;
-const {BLACK, SECONDARY_GRAY, SECONDARY_BLACK, RED} = COLORS;
+const {SECONDARY_GRAY} = COLORS;
 
 interface Props {
   route: RouteProp<{
@@ -35,45 +34,55 @@ interface Props {
 }
 
 const SignUp = ({route}: Props | any) => {
-  const {userRole} = route.params;
   const [showPassword, setShowPassword] = useState(false);
-
-  const [state, setState] = useState<boolean>(false);
+  const [showConfirmPassword, setConfirmShowPassword] = useState(false);
   const dispatch = useDispatch();
   const initialValues = {
-    userName: '',
+    email: '',
     password: '',
+    confirmPassword: '',
+    phoneNumber: '',
+    firstName: '',
+    DOB: '',
+    lastName: '',
   };
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
+  const toggleConfirmShowPassword = () => {
+    setConfirmShowPassword(!showConfirmPassword);
+  };
 
-  const submitHandler = ({userName, password}: any, {setSubmitting}: any) => {
-    // const params = {
-    //   firstName: 'firstName',
-    //   middleName: 'middleName',
-    //   lastName: 'lastName',
-    //   userName: userName?.trim(),
-    //   password,
-    //   userRole,
-    //   lawyerType: route.params.lawyerType || '',
-    //   isAndroid: ANDROID,
-    //   deviceId: fcmToken,
-    // };
-    // registerUser(params)
-    //   .then(({data}: any) => {
-    //     dispatch(setUser(data));
-    //     navigate(ROUTES.VERIFICATION_PHONE);
-    //   })
-    //   .catch(err => {
-    //     console.log('err', err);
-    //     showToast(
-    //       'Request Failed',
-    //       err?.response.data?.message.join(', '),
-    //       false,
-    //     );
-    //   })
-    //   .finally(() => setSubmitting(false));
+  const submitHandler = (
+    {email, password, DOB, firstName, lastName, phoneNumber}: any,
+    {setSubmitting}: any,
+  ) => {
+    const params = {
+      firstname: firstName,
+      lastname: lastName,
+      email: email,
+      password: password,
+      phonenumber: phoneNumber,
+      DOB: DOB,
+    };
+    registerUser(params)
+      .then(({data}: any) => {
+        let resp = {
+          isLoggedIn: true,
+          token: data.token,
+          user: data.user,
+        };
+        dispatch(setUser(resp));
+      })
+      .catch(err => {
+        console.log('err', err);
+        showToast(
+          'Request Failed',
+          err?.response.data?.message.join(', '),
+          false,
+        );
+      })
+      .finally(() => setSubmitting(false));
   };
 
   return (
@@ -91,26 +100,53 @@ const SignUp = ({route}: Props | any) => {
               touched,
               handleChange,
               handleSubmit,
+              setFieldValue,
               isSubmitting,
             }) => (
               <KeyboardAwareScrollView
                 showsVerticalScrollIndicator={false}
                 keyboardShouldPersistTaps={'never'}>
                 <AuthHeader title={'Sign Up'} />
-                <View style={{height: RF(SIZE * 3)}} />
+                <View style={{flex: 1, flexDirection: 'row'}}>
+                  <Input
+                    mainContainerStyle={GST.w50}
+                    title={'First Name'}
+                    textContentType={'name'}
+                    value={values.firstName}
+                    autoCapitalize={'none'}
+                    placeholder={'First Name'}
+                    keyboardType="default"
+                    onChangeText={handleChange('firstName')}
+                    error={
+                      touched.firstName && errors.firstName
+                        ? errors.firstName
+                        : ''
+                    }
+                  />
+                  <Input
+                    mainContainerStyle={[GST.w50, GST.pl1]}
+                    title={'Last Name'}
+                    textContentType={'name'}
+                    value={values.lastName}
+                    autoCapitalize={'none'}
+                    placeholder={'Last Name'}
+                    keyboardType="default"
+                    onChangeText={handleChange('lastName')}
+                    error={
+                      touched.lastName && errors.lastName ? errors.lastName : ''
+                    }
+                  />
+                </View>
                 <Input
-                  title={'Username'}
+                  title={'Email'}
                   textContentType={'emailAddress'}
-                  value={values.userName}
+                  value={values.email}
                   autoCapitalize={'none'}
-                  placeholder={'Username'}
+                  placeholder={'Email'}
                   keyboardType="email-address"
-                  onChangeText={handleChange('userName')}
-                  error={
-                    touched.userName && errors.userName ? errors.userName : ''
-                  }
+                  onChangeText={handleChange('email')}
+                  error={touched.email && errors.email ? errors.email : ''}
                 />
-                <View style={{height: RF(SIZE * 2)}} />
                 <Input
                   returnKeyType={'done'}
                   onSubmitEditing={handleSubmit}
@@ -122,22 +158,49 @@ const SignUp = ({route}: Props | any) => {
                   showPassword={showPassword}
                   toggleShowPassword={toggleShowPassword}
                   secureTextEntry={!showPassword}
-                  containerStyle={
-                    touched.password && errors.password
-                      ? GST.ERROR_CONTAINER
-                      : {}
+                  error={
+                    touched.password && errors.password ? errors.password : ''
                   }
                 />
-                <CustomText
-                  color={
-                    touched.password && errors.password ? RED : SECONDARY_BLACK
+                <Input
+                  returnKeyType={'done'}
+                  onSubmitEditing={handleSubmit}
+                  value={values.confirmPassword}
+                  placeholder={'Confirm Password'}
+                  textContentType={'password'}
+                  title={'Confirm Password'}
+                  onChangeText={handleChange('confirmPassword')}
+                  showPassword={showConfirmPassword}
+                  toggleShowPassword={toggleConfirmShowPassword}
+                  secureTextEntry={!showConfirmPassword}
+                  error={
+                    touched.confirmPassword && errors.confirmPassword
+                      ? errors.confirmPassword
+                      : ''
                   }
-                  style={GST.mb2}>
-                  Must be 8-15 characters and may contain letters, numbers, or
-                  special characters.
-                </CustomText>
+                />
+                <Input
+                  title={'Phone Number'}
+                  textContentType={'telephoneNumber'}
+                  value={values.phoneNumber}
+                  autoCapitalize={'none'}
+                  placeholder={'Phone Number'}
+                  keyboardType="phone-pad"
+                  onChangeText={handleChange('phoneNumber')}
+                  error={
+                    touched.phoneNumber && errors.phoneNumber
+                      ? errors.phoneNumber
+                      : ''
+                  }
+                />
+                <CustomDatePicker
+                  title={'Date of Birth'}
+                  value={values.DOB}
+                  onChange={setFieldValue}
+                  error={touched.DOB && errors.DOB ? errors.DOB : ''}
+                />
                 <PrimaryBtn
-                  disabled={!disableHandler(values)}
+                  disabled={!signUpDisableHandler(values)}
                   title={'Sign Up'}
                   onPress={handleSubmit}
                 />

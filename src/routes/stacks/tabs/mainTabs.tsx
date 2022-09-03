@@ -4,6 +4,7 @@ import {
   notification,
   searchIcon,
   tabPlusIcon,
+  user,
 } from '@assets/icons';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {COLORS} from '@theme/colors';
@@ -12,10 +13,11 @@ import React, {useEffect, useState} from 'react';
 import {Pressable, StyleSheet, View} from 'react-native';
 import FastImage, {Source} from 'react-native-fast-image';
 import {useDispatch, useSelector} from 'react-redux';
-import NotificationStack from '../mainStack/chatStack';
+import ProfileStack from '../mainStack/profileStack';
 import FeedStack from '../mainStack/homeStack';
 import PostStack from '../mainStack/postStack';
 import SearchStack from '../mainStack/searchStack';
+import Notifications from '@screens/general/notifications';
 
 const {WHITE, LIGHT_GRAY, PRIMARY, BLACK} = COLORS;
 
@@ -28,28 +30,24 @@ const CustomTabBarButton = ({children, onPress}: any) => (
 );
 
 const MyTabs = ({navigation}: any) => {
-  const {hideTabBar} = useSelector((state: any) => state.root.blackReducer);
   const [unReadMsgCount, setUnReadMsgCount] = useState(0);
   const dispatch = useDispatch();
-  useEffect(() => {}, [hideTabBar]);
   return (
     <Tab.Navigator
       screenOptions={{
         tabBarActiveTintColor: BLACK,
         tabBarInactiveTintColor: LIGHT_GRAY,
         tabBarShowLabel: false,
-        tabBarStyle: hideTabBar
-          ? styles.tabBarStylehide
-          : styles.tabBarStyleFlex,
+        // tabBarStyle: hideTabBar
+        //   ? styles.tabBarStylehide
+        //   : styles.tabBarStyleFlex,
+        tabBarStyle: styles.tabBarStyleFlex,
         headerShown: false,
         tabBarHideOnKeyboard: true,
       }}>
       <Tab.Screen
         name="FeedStack"
         component={FeedStack}
-        // listeners={{
-        //   tabPress: () => dispatch(setHomeTabPressed(true)),
-        // }}
         options={{
           tabBarIcon: ({color, focused}) => (
             <TabBarIcon
@@ -61,14 +59,6 @@ const MyTabs = ({navigation}: any) => {
       />
 
       <Tab.Screen
-        name="PostStack"
-        component={PostStack}
-        options={{
-          tabBarIcon: () => <TabBarIcon source={tabPlusIcon} color={WHITE} />,
-          tabBarButton: props => <CustomTabBarButton {...props} />,
-        }}
-      />
-      <Tab.Screen
         name="SearchStack"
         component={SearchStack}
         options={{
@@ -78,14 +68,32 @@ const MyTabs = ({navigation}: any) => {
         }}
       />
       <Tab.Screen
+        name="PostStack"
+        component={PostStack}
+        options={{
+          tabBarIcon: () => <TabBarIcon source={tabPlusIcon} color={WHITE} />,
+          tabBarButton: props => <CustomTabBarButton {...props} />,
+        }}
+      />
+
+      <Tab.Screen
         name="NotificationStack"
-        component={NotificationStack}
+        component={Notifications}
         options={{
           tabBarIcon: ({color, focused}) => (
             <TabBarIcon source={notification} color={color} />
           ),
           tabBarBadge: unReadMsgCount || undefined,
           tabBarBadgeStyle: {top: RF(12)},
+        }}
+      />
+      <Tab.Screen
+        name="ProfileStack"
+        component={ProfileStack}
+        options={{
+          tabBarIcon: ({color, focused}) => (
+            <TabBarIcon source={user} color={color} />
+          ),
         }}
       />
     </Tab.Navigator>
@@ -127,18 +135,9 @@ const styles = StyleSheet.create({
     paddingBottom: RF(10),
   },
   tabBarBtnMainContainer: {
-    // top: -RF(5),
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: RF(20),
-    // shadowColor: '#000',
-    // shadowOffset: {
-    //   width: 0,
-    //   height: 5,
-    // },
-    // shadowOpacity: 0.34,
-    // shadowRadius: 6.27,
-    // elevation: 10,
   },
   tabBarBtnMainContainerClose: {
     bottom: 0,

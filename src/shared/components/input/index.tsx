@@ -11,7 +11,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {hideEye, showEye} from '../../../assets/icons';
+import {hideEye, showEye} from '@assets/icons';
 import CustomText from '../customText';
 import {FONTS} from '@theme/fonts';
 import {ANDROID} from '@utils/constants';
@@ -39,7 +39,7 @@ interface InputProp extends TextInputProps {
   onRightPress: () => void;
   setKeyPress: (key: string) => void;
   disableContainerPress: boolean;
-  mainContainerStyle: ViewStyle;
+  mainContainerStyle: ViewStyle | any;
   inputStyle: any;
   tintColor: any;
   charLimit: number;
@@ -156,7 +156,8 @@ const Input = forwardRef((props: Partial<InputProp>, ref: any) => {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    ...GST.mb2,
+    ...GST.mb1,
+    position: 'relative',
   },
   input: {
     flex: 1,
@@ -174,6 +175,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'lightgray',
     borderRadius: RF(10),
+    ...GST.mb4,
   },
   multiline: {
     maxHeight: RF(80),

@@ -22,6 +22,9 @@ export const SIZING = StyleSheet.create({
   w60: {
     width: '60%',
   },
+  w50: {
+    width: '50%',
+  },
   w33: {
     width: '33%',
   },

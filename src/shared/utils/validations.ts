@@ -6,7 +6,11 @@ export const LoginVS = yup.object().shape({
     .required('Email is Required')
     .email('Invalid Email')
     .label('email'),
-  password: yup.string().required('Password is Required').label('password'),
+  password: yup
+    .string()
+    .required('Password is Required')
+    .min(8, 'Password too Short')
+    .label('password'),
 });
 
 export const RegistrationVS = yup.object().shape({

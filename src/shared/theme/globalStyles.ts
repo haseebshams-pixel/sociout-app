@@ -31,8 +31,10 @@ export const GST = StyleSheet.create({
     right: 10,
   },
   ERROR: {
-    marginTop: RF(2),
     color: RED,
+    position: 'absolute',
+    bottom: RF(0),
+    left: RF(0),
   },
   ERROR_CONTAINER: {
     borderWidth: 1,

@@ -26,10 +26,27 @@ const displayAlert = (
   );
 };
 const disableHandler = (value: any) => {
-  return value?.userName && value?.password ? true : false;
+  return value?.email && value?.password ? true : false;
+};
+const signUpDisableHandler = (value: any) => {
+  return value?.email &&
+    value?.password &&
+    value.confirmPassword &&
+    value.firstName &&
+    value.lastName &&
+    value.phoneNumber &&
+    value.DOB
+    ? true
+    : false;
 };
 const showToast = (text1: string, text2: string, type: boolean) => {
   Toast.show({text1, text2, type: type ? 'success' : 'error'});
 };
 
-export {disableHandler, getWidth, showToast, displayAlert};
+export {
+  disableHandler,
+  getWidth,
+  showToast,
+  displayAlert,
+  signUpDisableHandler,
+};

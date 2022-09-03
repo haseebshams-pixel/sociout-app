@@ -21,4 +21,7 @@ export const ROUTES = {
 
   //Notification Stack
   NOTIFICATIONS: 'Notifications',
+
+  //Profile Stack
+  PROFILE: 'profile',
 };

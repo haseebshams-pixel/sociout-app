@@ -1,5 +1,6 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Home from '@screens/general/home';
+import Notifications from '@screens/general/notifications';
 import {ROUTES} from '@utils/routes';
 import React from 'react';
 

@@ -14,7 +14,7 @@ export const userReducer = createSlice({
       let tempObj = {...state, ...action.payload};
       return tempObj;
     },
-    resetUser: () => initialState,
+    resetUser: state => initialState,
   },
 });
 

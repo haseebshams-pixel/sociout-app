@@ -12,7 +12,7 @@ import {Avatar} from 'react-native-elements';
 import {useSelector} from 'react-redux';
 import {styles} from './styles';
 const {DARK_GRAY} = COLORS;
-// create a component
+
 const Search = ({route}: any) => {
   const {user} = useSelector((state: any) => state.root.user);
   const [value, setvalue] = useState<any>('');
@@ -60,12 +60,11 @@ const Search = ({route}: any) => {
   return (
     <Wrapper>
       <StatusBar translucent barStyle={'dark-content'} />
-      <Header title={'Select communities'} />
+      <Header title={'Search'} />
       <HeaderComponent searchHandler={setvalue} />
       <View style={{height: HP(2)}} />
-      <HeaderComponent searchHandler={setvalue} title={'location'} />
     </Wrapper>
   );
 };
-//make this component available to the app
+
 export default Search;

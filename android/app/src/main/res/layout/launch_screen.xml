@@ -18,6 +18,7 @@
         android:layout_marginTop="312dp"
         android:layout_marginEnd="163dp"
         android:layout_marginBottom="342dp"
-        android:contentDescription="Splash logo image"
-        android:src="@drawable/logo" />
+        android:contentDescription="Splash logo image" />
+<!--        android:src="@drawable/logo" -->
+
 </RelativeLayout>

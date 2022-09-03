@@ -10,7 +10,6 @@ const Stack = createNativeStackNavigator();
 const NotificationStack = () => {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name={ROUTES.NOTIFICATIONS} component={Notifications} />
       <Stack.Screen name="Chats" component={Chats} />
     </Stack.Navigator>
   );
