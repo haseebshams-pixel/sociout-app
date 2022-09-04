@@ -1,8 +1,5 @@
 const splashlogo = require('./logo.png');
-const search = require('./search.png');
-const send = require('./send.png');
 const back = require('./back.png');
-const homeIcon = require('./home.png');
 const searchIcon = require('./search.png');
 const notification = require('./notification.png');
 const tabPlusIcon = require('./tabPlus.png');
@@ -10,19 +7,30 @@ const homeActive = require('./homeActive.png');
 const homeInactive = require('./homeInactive.png');
 const showEye = require('./showeye.png');
 const hideEye = require('./hideeye.png');
-const user = require('./user.png');
+const userIcon = require('./user.png');
+const chatIcon = require('./chat.png');
+const settingIcon = require('./setting.png');
+const logoutIcon = require('./logout.png');
+const changePasswordIcon = require('./changePassword.png');
+const termsIcon = require('./terms.png');
+const aboutIcon = require('./about.png');
+const deleteIcon = require('./trash.png');
 export {
   splashlogo,
-  search,
-  send,
   back,
   homeActive,
-  homeIcon,
   homeInactive,
   notification,
   searchIcon,
   tabPlusIcon,
   showEye,
   hideEye,
-  user,
+  userIcon,
+  chatIcon,
+  settingIcon,
+  logoutIcon,
+  changePasswordIcon,
+  termsIcon,
+  aboutIcon,
+  deleteIcon,
 };

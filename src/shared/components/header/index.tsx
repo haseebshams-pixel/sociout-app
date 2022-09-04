@@ -16,15 +16,9 @@ interface viewProp extends ViewProps {
   mainContainerStyle?: ViewStyle;
   leftIcon?: any;
   rightIcon?: any;
-  right?: string;
-  press?: any;
-  rightShow?: boolean;
+  onPress?: any;
   iconColor?: any;
-  rightBtn?: any;
   color?: any;
-  memberType?: any;
-  rightPress?: any;
-  rightImage?: any;
 }
 
 const Header = (props: viewProp) => {
@@ -35,15 +29,9 @@ const Header = (props: viewProp) => {
     rightIcon,
     containerStyle,
     mainContainerStyle,
-    right,
-    press,
-    rightShow,
+    onPress,
     iconColor,
-    rightBtn,
     color,
-    memberType,
-    rightImage,
-    rightPress,
   } = props;
 
   return (
@@ -59,39 +47,13 @@ const Header = (props: viewProp) => {
         </CustomText>
       </View>
       <View style={styles.lastContainer}>
-        {rightShow ? (
+        {rightIcon && (
           <Pressable
-            onPress={rightPress}
-            style={[containerStyle, styles.container]}>
-            <CustomText
-              bold
-              color={PRIMARY}
-              style={[styles.TextView, {right: 10}]}>
-              {right}
-            </CustomText>
-          </Pressable>
-        ) : rightImage ? (
-          <Pressable
-            onPress={rightPress}
-            style={[styles.containerView, styles.container]}>
-            <FastImage
-              source={rightImage}
-              style={[styles.img, {backgroundColor: iconColor, height: RF(20)}]}
-              resizeMode={'contain'}
-            />
-          </Pressable>
-        ) : memberType === 2 || memberType === 1 ? null : (
-          <Pressable
-            onPress={press}
+            onPress={onPress}
             style={[styles.containerView, styles.container]}>
             <FastImage
               source={rightIcon}
-              style={[styles.img, {backgroundColor: iconColor}]}
-              resizeMode={'contain'}
-            />
-            <FastImage
-              source={rightBtn}
-              style={[styles.img, {backgroundColor: iconColor}]}
+              style={[styles.img, {backgroundColor: iconColor, height: RF(20)}]}
               resizeMode={'contain'}
             />
           </Pressable>

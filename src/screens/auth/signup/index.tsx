@@ -5,7 +5,6 @@ import Header from '@components/header';
 import Input from '@components/input';
 import PrimaryBtn from '@components/primaryBtn';
 import Wrapper from '@components/wrapper';
-import {RouteProp} from '@react-navigation/native';
 import {setUser} from '@redux/reducers/userSlice';
 import {signUpDisableHandler, showToast} from '@services/helperService';
 import {COLORS} from '@theme/colors';
@@ -24,16 +23,7 @@ import {registerUser} from '@services/authService';
 const SIZE = 5;
 const {SECONDARY_GRAY} = COLORS;
 
-interface Props {
-  route: RouteProp<{
-    params: {
-      userRole: string;
-      lawyerType: string;
-    };
-  }>;
-}
-
-const SignUp = ({route}: Props | any) => {
+const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setConfirmShowPassword] = useState(false);
   const dispatch = useDispatch();
@@ -72,15 +62,13 @@ const SignUp = ({route}: Props | any) => {
           token: data.token,
           user: data.user,
         };
+        setSubmitting(false);
         dispatch(setUser(resp));
+        showToast('Success', 'User Logged In Successfully!', true);
       })
       .catch(err => {
         console.log('err', err);
-        showToast(
-          'Request Failed',
-          err?.response.data?.message.join(', '),
-          false,
-        );
+        showToast('Request Failed', err?.response.data, false);
       })
       .finally(() => setSubmitting(false));
   };
@@ -218,7 +206,6 @@ const SignUp = ({route}: Props | any) => {
                   titleSize={14}
                   customStyle={styles.socialBtnContainer}
                 /> */}
-                <CustomLoading visible={isSubmitting} />
               </KeyboardAwareScrollView>
             )}
           </Formik>

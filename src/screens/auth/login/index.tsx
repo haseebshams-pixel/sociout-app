@@ -10,22 +10,19 @@ import {loginUser} from '@services/authService';
 import {disableHandler, showToast} from '@services/helperService';
 import {navigate} from '@services/navService';
 import {COLORS} from '@theme/colors';
-import {ANDROID} from '@utils/constants';
 import {ROUTES} from '@utils/routes';
 import {LoginVS} from '@utils/validations';
 import {Formik} from 'formik';
-import React, {useRef, useState} from 'react';
-import {Pressable, View, Platform} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Pressable, View} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import styles from './styles';
+
 const {PRIMARY, PRIMARY_LIGHT} = COLORS;
 const Login = ({navigation}: any) => {
-  //// State handle
   const [showPassword, setShowPassword] = useState(false);
-  const [state, setstate] = useState<boolean>(false);
   const dispatch = useDispatch();
-  ////// Referance handle
 
   const initialValues = {
     email: '',
@@ -49,16 +46,15 @@ const Login = ({navigation}: any) => {
           user: data.user,
         };
         dispatch(setUser(resp));
+        setSubmitting(false);
+        showToast('Success', 'User Logged In Successfully!', true);
       })
       .catch(err => {
-        showToast(
-          'Request Failed',
-          err?.response.data?.message?.join(', '),
-          false,
-        );
+        showToast('Request Failed', err?.response.data, false);
       })
       .finally(() => setSubmitting(false));
   };
+
   return (
     <Wrapper>
       <>

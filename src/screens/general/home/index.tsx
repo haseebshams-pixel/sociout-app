@@ -1,13 +1,16 @@
 //import liraries
+import {chatIcon} from '@assets/icons';
 import CustomText from '@components/customText';
 import Header from '@components/header';
 import PrimaryBtn from '@components/primaryBtn';
 import {HeaderComponent} from '@components/searchHeader';
 import Wrapper from '@components/wrapper';
 import {resetUser, setUser} from '@redux/reducers/userSlice';
+import {navigate} from '@services/navService';
 import {COLORS} from '@theme/colors';
 import {GST} from '@theme/globalStyles';
 import {HP, RF, WP} from '@theme/responsive';
+import {ROUTES} from '@utils/routes';
 import React, {useState} from 'react';
 import {StatusBar, View} from 'react-native';
 import {Avatar} from 'react-native-elements';
@@ -63,15 +66,12 @@ const Home = ({route}: any) => {
   return (
     <Wrapper>
       <StatusBar translucent barStyle={'dark-content'} />
-      <Header title={'Home'} />
-      <View style={{height: HP(2)}} />
-      <PrimaryBtn
-        title="Log out"
-        onPress={() => {
-          dispatch(resetUser());
-          console.log('here');
-        }}
+      <Header
+        title={'Home'}
+        rightIcon={chatIcon}
+        onPress={() => navigate(ROUTES.CHAT)}
       />
+      <View style={{height: HP(2)}} />
     </Wrapper>
   );
 };

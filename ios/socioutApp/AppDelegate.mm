@@ -6,6 +6,7 @@
 
 #import <React/RCTAppSetupUtils.h>
 #import "RNSplashScreen.h"  
+#import <Firebase.h>
 
 #if RCT_NEW_ARCH_ENABLED
 #import <React/CoreModulesPlugins.h>
@@ -63,6 +64,7 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
   [RNSplashScreen show];
+  [FIRApp configure];
   return YES;
 
 }

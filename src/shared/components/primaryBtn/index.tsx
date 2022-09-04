@@ -20,6 +20,8 @@ interface Props {
   sticky?: boolean;
   leftIcon?: any;
   flex?: boolean;
+  leftIconStyle: ViewStyle | any;
+  tintColor: string;
 }
 
 const PrimaryBtn = ({
@@ -34,6 +36,8 @@ const PrimaryBtn = ({
   bgColor = disabled ? PRIMARY_LIGHT : PRIMARY,
   flex,
   customContainerStyle,
+  leftIconStyle,
+  tintColor,
 }: Partial<Props>) => {
   const insets = useSafeAreaInsets();
 
@@ -45,10 +49,20 @@ const PrimaryBtn = ({
         customContainerStyle,
       ]}>
       <TouchableOpacity
-        style={[styles.container, {backgroundColor: bgColor}, customStyle]}
+        style={[
+          styles.container,
+          {backgroundColor: bgColor, borderColor: bgColor},
+          customStyle,
+        ]}
         onPress={onPress}
         disabled={disabled}>
-        {leftIcon && <FastImage source={leftIcon} style={styles.leftIcon} />}
+        {leftIcon && (
+          <FastImage
+            source={leftIcon}
+            style={[styles.leftIcon, leftIconStyle]}
+            tintColor={tintColor}
+          />
+        )}
         <CustomText color={titleColor} size={titleSize}>
           {title}
         </CustomText>
@@ -65,6 +79,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
+    borderWidth: 1,
   },
   sticky: {
     justifyContent: 'flex-end',

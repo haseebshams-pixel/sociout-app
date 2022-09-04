@@ -5,7 +5,7 @@ import {RF} from '@theme/responsive';
 import React, {useState} from 'react';
 import {StyleSheet, TextInput, View} from 'react-native';
 import {Icon} from 'react-native-elements';
-const {PRIMARY, BLACK, LIGHT_GRAY} = COLORS;
+const {PRIMARY, WHITE, LIGHT_GRAY} = COLORS;
 const {REGULAR} = FONTS;
 const HeaderComponent = ({searchHandler, title}: any) => {
   const [value, setvalue] = useState('');
@@ -19,7 +19,7 @@ const HeaderComponent = ({searchHandler, title}: any) => {
         <Icon
           containerStyle={{paddingRight: RF(10)}}
           name={'search-outline'}
-          color={LIGHT_GRAY}
+          color={WHITE}
           tvParallaxProperties={undefined}
           type={'ionicon'}
         />
@@ -28,6 +28,7 @@ const HeaderComponent = ({searchHandler, title}: any) => {
           style={styles.input}
           placeholder={title ? title : 'Search'}
           onChangeText={e => dataHandler(e)}
+          placeholderTextColor={LIGHT_GRAY}
         />
         {value?.length > 0 && (
           <Icon
@@ -35,7 +36,7 @@ const HeaderComponent = ({searchHandler, title}: any) => {
             name={'close'}
             tvParallaxProperties={undefined}
             type={'ionicon'}
-            color={LIGHT_GRAY}
+            color={WHITE}
             onPress={() => dataHandler('')}
           />
         )}
@@ -64,7 +65,7 @@ const styles = StyleSheet.create({
   input: {
     fontFamily: REGULAR,
     fontSize: RF(14),
-    color: BLACK,
+    color: WHITE,
     flex: 1,
   },
   divider: {

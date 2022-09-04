@@ -4,7 +4,7 @@ import {
   notification,
   searchIcon,
   tabPlusIcon,
-  user,
+  userIcon,
 } from '@assets/icons';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {COLORS} from '@theme/colors';
@@ -92,7 +92,7 @@ const MyTabs = ({navigation}: any) => {
         component={ProfileStack}
         options={{
           tabBarIcon: ({color, focused}) => (
-            <TabBarIcon source={user} color={color} />
+            <TabBarIcon source={userIcon} color={color} />
           ),
         }}
       />

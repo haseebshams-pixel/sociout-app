@@ -60,10 +60,7 @@ const Chats = ({route}: any) => {
   return (
     <Wrapper>
       <StatusBar translucent barStyle={'dark-content'} />
-      <Header title={'Chat'} />
-      <HeaderComponent searchHandler={setvalue} />
-      <View style={{height: HP(2)}} />
-      <HeaderComponent searchHandler={setvalue} title={'location'} />
+      <Header title={'Chat'} leftIcon />
     </Wrapper>
   );
 };

@@ -74,7 +74,7 @@ const CustomDatePicker = forwardRef(
               </CustomText>
             ) : (
               <CustomText size={15} color={COLORS.GRAY} style={[styles.input]}>
-                Select Date of Birth
+                Date of Birth
               </CustomText>
             )}
           </Pressable>

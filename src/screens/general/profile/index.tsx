@@ -1,11 +1,14 @@
 //import liraries
+import {settingIcon} from '@assets/icons';
 import CustomText from '@components/customText';
 import Header from '@components/header';
 import {HeaderComponent} from '@components/searchHeader';
 import Wrapper from '@components/wrapper';
+import {navigate} from '@services/navService';
 import {COLORS} from '@theme/colors';
 import {GST} from '@theme/globalStyles';
 import {HP, RF, WP} from '@theme/responsive';
+import {ROUTES} from '@utils/routes';
 import React, {useState} from 'react';
 import {StatusBar, View} from 'react-native';
 import {Avatar} from 'react-native-elements';
@@ -60,7 +63,11 @@ const Profile = ({route}: any) => {
   return (
     <Wrapper>
       <StatusBar translucent barStyle={'dark-content'} />
-      <Header title={'Profile'} />
+      <Header
+        title={'Profile'}
+        rightIcon={settingIcon}
+        onPress={() => navigate(ROUTES.SETTING)}
+      />
     </Wrapper>
   );
 };
