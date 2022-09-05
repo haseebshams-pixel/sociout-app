@@ -68,6 +68,7 @@ const Profile = ({route}: any) => {
         rightIcon={settingIcon}
         onPress={() => navigate(ROUTES.SETTING)}
       />
+      <View style={{height: '100%', backgroundColor: 'red'}}></View>
     </Wrapper>
   );
 };

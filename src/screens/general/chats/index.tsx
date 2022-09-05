@@ -61,6 +61,7 @@ const Chats = ({route}: any) => {
     <Wrapper>
       <StatusBar translucent barStyle={'dark-content'} />
       <Header title={'Chat'} leftIcon />
+      <View style={{flex: 1, backgroundColor: 'red'}}></View>
     </Wrapper>
   );
 };

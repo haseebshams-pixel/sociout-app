@@ -1,12 +1,13 @@
 import {COLORS} from '@theme/colors';
 import {GST} from '@theme/globalStyles';
-import {RF} from '@theme/responsive';
+import {HP, RF} from '@theme/responsive';
 import {StyleSheet} from 'react-native';
 
 const {LIGHT_GRAY} = COLORS;
 
 export const styles = StyleSheet.create({
   container: {
+    backgroundColor: LIGHT_GRAY,
     flex: 1,
   },
   iconStyle: {width: RF(20), height: RF(20)},

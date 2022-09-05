@@ -83,8 +83,8 @@ const MyTabs = ({navigation}: any) => {
           tabBarIcon: ({color, focused}) => (
             <TabBarIcon source={notification} color={color} />
           ),
-          tabBarBadge: unReadMsgCount || undefined,
-          tabBarBadgeStyle: {top: RF(12)},
+          // tabBarBadge: unReadMsgCount || undefined,
+          // tabBarBadgeStyle: {top: RF(12)},
         }}
       />
       <Tab.Screen
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   tabBarStyleFlex: {
     backgroundColor: WHITE,
     height: RF(80),
-    display: 'flex',
+    // display: 'flex',
     elevation: 2,
     paddingBottom: RF(10),
   },
@@ -157,6 +157,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'red',
   },
   mt10: {
-    marginTop: RF(10),
+    // marginTop: RF(10),
   },
 });

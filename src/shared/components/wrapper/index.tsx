@@ -1,4 +1,5 @@
 import {COLORS} from '@theme/colors';
+import {HP} from '@theme/responsive';
 import React from 'react';
 import {StatusBar, StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';

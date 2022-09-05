@@ -193,11 +193,11 @@ const SignUp = () => {
                   onPress={handleSubmit}
                 />
                 <CustomLoading visible={isSubmitting} />
-                <View style={styles.orContainer}>
+                {/* <View style={styles.orContainer}>
                   <CustomText color={SECONDARY_GRAY} size={RF(14)}>
                     {'Or'}
                   </CustomText>
-                </View>
+                </View> */}
                 {/* <PrimaryBtn
                   bgColor={'transparent'}
                   title={'Sign Up with LinkedIn'}

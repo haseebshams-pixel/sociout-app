@@ -1,77 +1,93 @@
 //import liraries
 import {chatIcon} from '@assets/icons';
+import CustomLoading from '@components/customLoading';
 import CustomText from '@components/customText';
 import Header from '@components/header';
-import PrimaryBtn from '@components/primaryBtn';
-import {HeaderComponent} from '@components/searchHeader';
+import PostCard from '@components/postCard';
+import ShareCard from '@components/shareCard';
 import Wrapper from '@components/wrapper';
-import {resetUser, setUser} from '@redux/reducers/userSlice';
 import {navigate} from '@services/navService';
+import {getAllPosts} from '@services/postService';
 import {COLORS} from '@theme/colors';
 import {GST} from '@theme/globalStyles';
 import {HP, RF, WP} from '@theme/responsive';
 import {ROUTES} from '@utils/routes';
-import React, {useState} from 'react';
-import {StatusBar, View} from 'react-native';
-import {Avatar} from 'react-native-elements';
-import {useDispatch, useSelector} from 'react-redux';
+import React, {useEffect, useState} from 'react';
+import {FlatList, StatusBar, View} from 'react-native';
+import {SkypeIndicator} from 'react-native-indicators';
 import {styles} from './styles';
-const {DARK_GRAY} = COLORS;
+
 // create a component
 const Home = ({route}: any) => {
-  const {user} = useSelector((state: any) => state.root.user);
-  const dispatch = useDispatch();
-  const [value, setvalue] = useState<any>('');
-  const ItemCard = (item: any) => {
-    const image: any = item?.pictureUrl;
-    return (
-      <View
-        style={{
-          paddingHorizontal: WP(6),
-          ...GST.mb4,
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}>
-        <View style={GST.FLEX_ROW}>
-          {image ? (
-            <Avatar
-              containerStyle={{marginRight: RF(10)}}
-              size={RF(40)}
-              source={{uri: image}}
-              rounded
-            />
-          ) : (
-            <View style={styles.imageStyle}>
-              <CustomText
-                color={DARK_GRAY}
-                style={{textAlign: 'center'}}
-                size={15}>
-                {'#'}
-              </CustomText>
-            </View>
-          )}
-          <View style={{width: WP(50)}}>
-            <CustomText>{item?.name}</CustomText>
-            {item?.memberCounts > 0 && (
-              <CustomText color={DARK_GRAY}>
-                {item?.memberCounts || 0} members{' '}
-              </CustomText>
-            )}
-          </View>
-        </View>
-      </View>
-    );
+  const [skip, setSkip] = useState(0);
+  const [loader, setLaoder] = useState(false);
+  const [bottomLoader, setBottomLoader] = useState(false);
+  const [endReached, setEndReached] = useState(false);
+  const [posts, setPosts] = useState([]);
+  const getPosts = (k: number) => {
+    getAllPosts(k)
+      .then(({data}: any) => {
+        setPosts(p => {
+          return p.concat(data);
+        });
+      })
+      .catch(err => {
+        console.log('Error', err);
+      })
+      .finally(() => {
+        setLaoder(false);
+        setBottomLoader(false);
+      });
   };
+
+  useEffect(() => {
+    setLaoder(true);
+    getPosts(skip);
+  }, []);
+
+  const FooterComponent = () => {
+    if (bottomLoader) {
+      return (
+        <SkypeIndicator
+          size={RF(20)}
+          color={COLORS.BLACK}
+          style={[GST.mt3, GST.mb3]}
+        />
+      );
+    } else {
+      return null;
+    }
+  };
+
   return (
-    <Wrapper>
+    <Wrapper noPaddingBottom>
       <StatusBar translucent barStyle={'dark-content'} />
       <Header
         title={'Home'}
         rightIcon={chatIcon}
         onPress={() => navigate(ROUTES.CHAT)}
       />
-      <View style={{height: HP(2)}} />
+      <FlatList
+        renderItem={({item}: any) => <PostCard item={item} />}
+        data={posts}
+        style={[styles.container]}
+        onEndReached={() => {
+          console.log('Reached end');
+          setBottomLoader(true);
+          setEndReached(true);
+        }}
+        onMomentumScrollEnd={() => {
+          if (endReached) {
+            let k = skip + 3;
+            setSkip(k);
+            getPosts(k);
+            setEndReached(false);
+          }
+        }}
+        onEndReachedThreshold={10}
+        ListFooterComponent={FooterComponent}
+      />
+      <CustomLoading visible={loader} />
     </Wrapper>
   );
 };

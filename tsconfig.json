@@ -55,7 +55,9 @@
       "@theme": ["./shared/theme"],
       "@theme/*": ["./shared/theme/*"],
       "@utils": ["./shared/utils"],
-      "@utils/*": ["./shared/utils/*"]
+      "@utils/*": ["./shared/utils/*"],
+      "@loaders": ["./shared/loaders"],
+      "@loaders/*": ["./shared/loaders/*"]
     },
     // "rootDirs": [],                        /* List of root folders whose combined content represents the structure of the project at runtime. */
     // "typeRoots": [],                       /* List of folders to include type definitions from. */

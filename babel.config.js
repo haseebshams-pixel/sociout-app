@@ -14,6 +14,7 @@ module.exports = {
           '@services': './src/shared/services',
           '@theme': './src/shared/theme',
           '@utils': './src/shared/utils',
+          '@loaders': './src/shared/loaders',
         },
       },
     ],

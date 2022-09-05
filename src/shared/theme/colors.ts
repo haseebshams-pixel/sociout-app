@@ -12,4 +12,5 @@ export const COLORS = {
   SPLASH: '#005480',
   EX_DARK_BLUE: '#0B1E30',
   DARKBLUE: '#004061',
+  PLACEHOLDER: '#9C9FA7',
 };

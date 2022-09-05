@@ -20,7 +20,11 @@ export const GST = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-
+  FLEX_ROW_SPACE: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   CENTER_ALIGN: {
     alignSelf: 'center',
   },
