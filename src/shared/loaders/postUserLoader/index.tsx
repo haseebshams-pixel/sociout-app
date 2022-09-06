@@ -6,6 +6,7 @@ const PostUserLoader = (props: any) => (
     speed={1}
     width={200}
     height={50}
+    Duration={2000}
     viewBox="0 0 200 50"
     backgroundColor="#d9d9d9"
     foregroundColor="#f0f0f0"

@@ -6,6 +6,7 @@ const PostContentLoader = (props: any) => (
     speed={1}
     width={400}
     height={50}
+    Duration={1000}
     viewBox="0 0 400 50"
     backgroundColor="#d9d9d9"
     foregroundColor="#f0f0f0"

@@ -20,4 +20,9 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     ...GST.mr2,
   },
+  modalizeContainer: {
+    flex: 1,
+    paddingTop: RF(30),
+    padding: RF(20),
+  },
 });

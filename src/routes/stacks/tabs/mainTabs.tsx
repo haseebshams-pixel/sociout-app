@@ -31,6 +31,7 @@ const CustomTabBarButton = ({children, onPress}: any) => (
 
 const MyTabs = ({navigation}: any) => {
   const [unReadMsgCount, setUnReadMsgCount] = useState(0);
+  const {bottomTab} = useSelector((state: any) => state.root);
   const dispatch = useDispatch();
   return (
     <Tab.Navigator
@@ -38,10 +39,10 @@ const MyTabs = ({navigation}: any) => {
         tabBarActiveTintColor: BLACK,
         tabBarInactiveTintColor: LIGHT_GRAY,
         tabBarShowLabel: false,
-        // tabBarStyle: hideTabBar
-        //   ? styles.tabBarStylehide
-        //   : styles.tabBarStyleFlex,
-        tabBarStyle: styles.tabBarStyleFlex,
+        tabBarStyle: !bottomTab?.isDisplay
+          ? styles.tabBarStylehide
+          : styles.tabBarStyleFlex,
+        // tabBarStyle: styles.tabBarStyleFlex,
         headerShown: false,
         tabBarHideOnKeyboard: true,
       }}>

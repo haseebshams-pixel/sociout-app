@@ -15,7 +15,7 @@ const setupAxios = () => {
     (config: any) => {
       const token = store.getState().root?.user?.token;
       if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+        config.headers['x-auth-token'] = `${token}`;
       }
       return config;
     },

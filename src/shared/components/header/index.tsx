@@ -19,9 +19,10 @@ interface viewProp extends ViewProps {
   onPress?: any;
   iconColor?: any;
   color?: any;
+  borderBottom: boolean;
 }
 
-const Header = (props: viewProp) => {
+const Header = (props: Partial<viewProp>) => {
   const {
     title,
     titleColor = BLACK,
@@ -32,10 +33,19 @@ const Header = (props: viewProp) => {
     onPress,
     iconColor,
     color,
+    borderBottom,
   } = props;
 
   return (
-    <View style={[styles.mainContainer, mainContainerStyle]}>
+    <View
+      style={[
+        styles.mainContainer,
+        mainContainerStyle,
+        borderBottom && {
+          borderBottomWidth: RF(1),
+          borderBottomColor: COLORS.LIGHT_GRAY,
+        },
+      ]}>
       <View style={styles.subContainer}>
         <View style={{backgroundColor: iconColor}}>
           {leftIcon ? <BackButton color={color} /> : null}
@@ -79,8 +89,8 @@ const styles = StyleSheet.create({
   mainContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    ...GST.my4,
-    ...GST.mx3,
+    ...GST.py4,
+    ...GST.px3,
   },
   subContainer: {flex: 0.1},
   middleContainer: {

@@ -24,4 +24,7 @@ export const styles = StyleSheet.create({
     height: RF(2),
     backgroundColor: COLORS.LIGHT_GRAY,
   },
+  iconContainer: {
+    alignItems: 'center',
+  },
 });

@@ -3,10 +3,15 @@ import {RF, WP} from '@theme/responsive';
 import React, {useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {Image} from 'react-native-elements';
+import {
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from 'react-native-gesture-handler';
 interface Props {
   images: any;
+  onPress: any;
 }
-const CustomImageSlider = ({images}: Props) => {
+const CustomImageSlider = ({images, onPress}: Partial<Props>) => {
   const [active, setActive] = useState(0);
 
   const change = (nativeEvent: any) => {
@@ -28,7 +33,7 @@ const CustomImageSlider = ({images}: Props) => {
         pagingEnabled
         horizontal>
         {images.map((e: any, index: number) => (
-          <View key={index}>
+          <TouchableWithoutFeedback key={index} onPress={onPress}>
             <Image
               style={styles.wrapImage}
               source={{uri: e}}
@@ -36,7 +41,7 @@ const CustomImageSlider = ({images}: Props) => {
               height={undefined}
               width={undefined}
             />
-          </View>
+          </TouchableWithoutFeedback>
         ))}
       </ScrollView>
       <View style={styles.wrapDot}>
@@ -55,7 +60,7 @@ const styles = StyleSheet.create({
   wrapScroll: {
     width: WP(80),
     height: RF(200),
-    backgroundColor: COLORS.LIGHT_GRAY,
+    backgroundColor: COLORS.WHITE,
   },
   wrapImage: {
     width: WP(80),
@@ -73,13 +78,14 @@ const styles = StyleSheet.create({
     color: 'transparent',
     borderRadius: 100,
     borderColor: COLORS.PLACEHOLDER,
+    backgroundColor: COLORS.PLACEHOLDER,
     borderWidth: 1,
     width: RF(8),
     height: RF(8),
   },
   dotActive: {
     margin: 3,
-    backgroundColor: COLORS.WHITE,
+    backgroundColor: COLORS.PRIMARY,
     borderRadius: 100,
     width: RF(8),
     height: RF(8),

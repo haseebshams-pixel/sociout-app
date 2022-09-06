@@ -9,14 +9,17 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  iconStyle: {width: RF(20), height: RF(20)},
-  imageStyle: {
-    width: RF(40),
-    height: RF(40),
-    backgroundColor: LIGHT_GRAY,
-    borderRadius: RF(20),
-    justifyContent: 'center',
-    alignItems: 'center',
-    ...GST.mr2,
+  headerContainer: {
+    height: RF(200),
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.LIGHT_GRAY,
   },
+  profilePhoto: {height: RF(80), width: RF(80), borderRadius: RF(100)},
+  userInfoContainer: {
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    flexDirection: 'row',
+    flex: 1,
+  },
+  editbtn: {height: RF(35), borderRadius: RF(3)},
 });

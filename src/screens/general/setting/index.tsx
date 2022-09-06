@@ -71,7 +71,6 @@ const Settings = ({route}: any) => {
           customStyle={styles.logoutContainer}
           onPress={() => {
             dispatch(resetUser());
-            console.log('here');
           }}
         />
       </View>
