@@ -20,6 +20,7 @@ interface viewProp extends ViewProps {
   iconColor?: any;
   color?: any;
   borderBottom: boolean;
+  backAction: any;
 }
 
 const Header = (props: Partial<viewProp>) => {
@@ -34,6 +35,7 @@ const Header = (props: Partial<viewProp>) => {
     iconColor,
     color,
     borderBottom,
+    backAction,
   } = props;
 
   return (
@@ -48,7 +50,9 @@ const Header = (props: Partial<viewProp>) => {
       ]}>
       <View style={styles.subContainer}>
         <View style={{backgroundColor: iconColor}}>
-          {leftIcon ? <BackButton color={color} /> : null}
+          {leftIcon ? (
+            <BackButton color={color} backAction={backAction} />
+          ) : null}
         </View>
       </View>
       <View style={styles.middleContainer}>

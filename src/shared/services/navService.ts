@@ -6,6 +6,10 @@ export const navigate = (name: string, params?: any) => {
   navigationRef.current?.navigate(name, params);
 };
 
+export const navigatePush = (name: string, params?: any) => {
+  navigationRef.current?.push(name, params);
+};
+
 export const getCurrentRoute = () => {
   const route = navigationRef.getCurrentRoute();
   return route.name;

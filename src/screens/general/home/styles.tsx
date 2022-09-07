@@ -25,4 +25,5 @@ export const styles = StyleSheet.create({
     paddingTop: RF(30),
     padding: RF(20),
   },
+  listHeader: {alignItems: 'center', justifyContent: 'center', flexGrow: 1},
 });

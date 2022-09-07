@@ -25,4 +25,6 @@ export const ROUTES = {
   //Profile Stack
   PROFILE: 'profile',
   SETTING: 'setting',
+  FRIENDS: 'friends',
+  REQUESTS: 'requests',
 };

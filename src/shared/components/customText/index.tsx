@@ -4,7 +4,7 @@ import {RF} from '@theme/responsive';
 import React from 'react';
 import {Text, TextProps} from 'react-native';
 
-const {REGULAR} = FONTS;
+const {REGULAR, SEMI_BOLD, BOLD} = FONTS;
 const {BLACK} = COLORS;
 
 interface Props extends TextProps {

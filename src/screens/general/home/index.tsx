@@ -20,6 +20,8 @@ import {useDispatch} from 'react-redux';
 import {styles} from './styles';
 import {Share2} from 'react-native-feather';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import ShareModalize from '@components/shareModalize';
+import {showToast} from '@services/helperService';
 
 // create a component
 const Home = () => {
@@ -30,6 +32,7 @@ const Home = () => {
   const [posts, setPosts] = useState([]);
   const dispatch = useDispatch();
   const modalizeRef = useRef<Modalize>(null);
+  const [refresh, setRefresh] = useState(false);
   const onOpen = () => {
     dispatch(setBottomTab({isDisplay: false}));
     modalizeRef.current?.open();
@@ -51,28 +54,23 @@ const Home = () => {
       .finally(() => {
         setLaoder(false);
         setBottomLoader(false);
+        setRefresh(false);
       });
   };
   const handleShare = () => {
     let obj = {
       id: sharePostData?.item?.PostObject[0]?._id,
     };
-
     sharePost(obj)
       .then(() => {
         onClose();
         modalizeRef.current?.close();
-        setPosts([]);
-        setLaoder(true);
-        setSkip(0);
-        getPosts(0);
+        showToast('Success', 'Shared Successfuly!', true);
       })
       .catch(err => {
         console.log('Error', err);
       })
-      .finally(() => {
-        setLaoder(false);
-      });
+      .finally(() => {});
   };
 
   useEffect(() => {
@@ -81,7 +79,7 @@ const Home = () => {
   }, []);
 
   const FooterComponent = () => {
-    if (bottomLoader) {
+    if (bottomLoader && !refresh) {
       return (
         <SkypeIndicator
           size={RF(20)}
@@ -109,36 +107,42 @@ const Home = () => {
         data={posts}
         style={[styles.container]}
         onEndReached={() => {
-          setBottomLoader(true);
-          setEndReached(true);
-        }}
-        onMomentumScrollEnd={() => {
-          if (endReached) {
+          if (endReached && !refresh && bottomLoader) {
             let k = skip + 3;
             setSkip(k);
             getPosts(k);
             setEndReached(false);
           }
         }}
-        onEndReachedThreshold={10}
+        onMomentumScrollBegin={() => {
+          setBottomLoader(true);
+          setEndReached(true);
+        }}
+        onEndReachedThreshold={0}
         ListFooterComponent={FooterComponent}
+        refreshing={refresh}
+        onRefresh={() => {
+          setBottomLoader(false);
+          setEndReached(false);
+          setRefresh(true);
+          setPosts([]);
+          setSkip(0);
+          getPosts(0);
+        }}
+        ListHeaderComponent={() =>
+          posts?.length == 0 && !loader && !refresh ? (
+            <CustomText>No Post found!</CustomText>
+          ) : null
+        }
+        ListHeaderComponentStyle={[styles.listHeader]}
       />
       <CustomLoading visible={loader} />
-      <Modalize ref={modalizeRef} modalHeight={RF(170)} onClose={onClose}>
-        <View style={[styles.modalizeContainer]}>
-          <TouchableOpacity style={[GST.FLEX_ROW]} onPressIn={handleShare}>
-            <Share2 color={COLORS.GRAY} />
-            <View style={[GST.ml3]}>
-              <CustomText bold color={COLORS.GRAY} size={15}>
-                Repost
-              </CustomText>
-              <CustomText color={COLORS.GRAY}>
-                {`Instantly bring ${sharePostData?.user?.firstname}'s post to others' feeds`}
-              </CustomText>
-            </View>
-          </TouchableOpacity>
-        </View>
-      </Modalize>
+      <ShareModalize
+        modalizeRef={modalizeRef}
+        onClose={onClose}
+        handleShare={handleShare}
+        sharePostData={sharePostData}
+      />
     </Wrapper>
   );
 };

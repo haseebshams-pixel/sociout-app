@@ -92,7 +92,6 @@ const PostCard = ({item, setSharePost, onOpen}: Props) => {
 
   const toggleOverlay = () => {
     setVisible(!visible);
-    console.log('Reached');
   };
 
   const fetchUser = async () => {

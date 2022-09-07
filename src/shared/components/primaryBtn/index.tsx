@@ -5,6 +5,7 @@ import {RF} from '@theme/responsive';
 import React from 'react';
 import {StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native';
 import FastImage from 'react-native-fast-image';
+import {SkypeIndicator} from 'react-native-indicators';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 const {WHITE, PRIMARY, PRIMARY_LIGHT} = COLORS;
 
@@ -22,6 +23,8 @@ interface Props {
   flex?: boolean;
   leftIconStyle: ViewStyle | any;
   tintColor: string;
+  loader: boolean;
+  loaderColor: string;
 }
 
 const PrimaryBtn = ({
@@ -38,6 +41,8 @@ const PrimaryBtn = ({
   customContainerStyle,
   leftIconStyle,
   tintColor,
+  loader,
+  loaderColor = WHITE,
 }: Partial<Props>) => {
   const insets = useSafeAreaInsets();
 
@@ -63,9 +68,13 @@ const PrimaryBtn = ({
             tintColor={tintColor}
           />
         )}
-        <CustomText color={titleColor} size={titleSize}>
-          {title}
-        </CustomText>
+        {loader ? (
+          <SkypeIndicator size={titleSize} color={loaderColor} />
+        ) : (
+          <CustomText color={titleColor} size={titleSize}>
+            {title}
+          </CustomText>
+        )}
       </TouchableOpacity>
     </View>
   );

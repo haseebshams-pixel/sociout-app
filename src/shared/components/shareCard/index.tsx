@@ -83,7 +83,6 @@ const ShareCard = ({item}: Props) => {
 
   const toggleOverlay = () => {
     setVisible(!visible);
-    console.log('Reached');
   };
   const fetchUser = async () => {
     setUserLoader(true);

@@ -10,7 +10,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {COLORS} from '@theme/colors';
 import {RF} from '@theme/responsive';
 import React, {useEffect, useState} from 'react';
-import {Pressable, StyleSheet, View} from 'react-native';
+import {Pressable, StyleSheet, Touchable, View} from 'react-native';
 import FastImage, {Source} from 'react-native-fast-image';
 import {useDispatch, useSelector} from 'react-redux';
 import ProfileStack from '../mainStack/profileStack';
@@ -18,6 +18,12 @@ import FeedStack from '../mainStack/homeStack';
 import PostStack from '../mainStack/postStack';
 import SearchStack from '../mainStack/searchStack';
 import Notifications from '@screens/general/notifications';
+import {
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from 'react-native-gesture-handler';
+import {navigate} from '@services/navService';
+import {ROUTES} from '@utils/routes';
 
 const {WHITE, LIGHT_GRAY, PRIMARY, BLACK} = COLORS;
 
@@ -31,11 +37,11 @@ const CustomTabBarButton = ({children, onPress}: any) => (
 
 const MyTabs = ({navigation}: any) => {
   const [unReadMsgCount, setUnReadMsgCount] = useState(0);
-  const {bottomTab} = useSelector((state: any) => state.root);
+  const {bottomTab, user} = useSelector((state: any) => state.root);
   const dispatch = useDispatch();
   return (
     <Tab.Navigator
-      screenOptions={{
+      screenOptions={({route}: any) => ({
         tabBarActiveTintColor: BLACK,
         tabBarInactiveTintColor: LIGHT_GRAY,
         tabBarShowLabel: false,
@@ -45,7 +51,7 @@ const MyTabs = ({navigation}: any) => {
         // tabBarStyle: styles.tabBarStyleFlex,
         headerShown: false,
         tabBarHideOnKeyboard: true,
-      }}>
+      })}>
       <Tab.Screen
         name="FeedStack"
         component={FeedStack}
@@ -93,9 +99,14 @@ const MyTabs = ({navigation}: any) => {
         component={ProfileStack}
         options={{
           tabBarIcon: ({color, focused}) => (
-            <TabBarIcon source={userIcon} color={color} />
+            <TabBarIcon
+              source={userIcon}
+              color={color}
+              onPress={() => navigate(ROUTES.PROFILE, {id: user?.user?.id})}
+            />
           ),
         }}
+        initialParams={{id: user?.user?.id}}
       />
     </Tab.Navigator>
   );
@@ -105,17 +116,21 @@ const TabBarIcon = ({
   source,
   size = 20,
   color,
-}: {
+  onPress,
+}: Partial<{
   source: Source;
   size?: number;
   color: string;
-}) => (
-  <FastImage
-    source={source}
-    style={{width: RF(size), height: RF(size)}}
-    tintColor={color}
-    resizeMode={'contain'}
-  />
+  onPress: any;
+}>) => (
+  <TouchableWithoutFeedback onPress={onPress}>
+    <FastImage
+      source={source}
+      style={{width: RF(size), height: RF(size)}}
+      tintColor={color}
+      resizeMode={'contain'}
+    />
+  </TouchableWithoutFeedback>
 );
 
 export default MyTabs;
