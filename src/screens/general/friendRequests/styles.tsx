@@ -1,29 +1,48 @@
 import {COLORS} from '@theme/colors';
 import {GST} from '@theme/globalStyles';
-import {RF} from '@theme/responsive';
+import {RF, WP} from '@theme/responsive';
 import {StyleSheet} from 'react-native';
 
 const {LIGHT_GRAY, RED, WHITE, PRIMARY} = COLORS;
 
 export const styles = StyleSheet.create({
   container: {
-    flex: 1,
     padding: RF(20),
+    flex: 1,
   },
-  iconStyle: {
-    width: RF(15),
-    height: RF(15),
+  renderContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
-  passwordIconStyle: {
-    width: RF(18),
-    height: RF(18),
+  profilePic: {height: RF(35), width: RF(35), borderRadius: RF(100)},
+  removeBTN: {
+    width: RF(55),
+    marginTop: RF(0),
+    height: RF(25),
+    borderRadius: RF(5),
+    backgroundColor: COLORS.RED,
+    borderColor: COLORS.RED,
   },
-  deleteContainer: {
-    backgroundColor: RED,
-    borderColor: RED,
+  addBTN: {
+    width: RF(55),
+    marginTop: RF(0),
+    height: RF(25),
+    borderRadius: RF(5),
   },
-  logoutContainer: {
-    backgroundColor: WHITE,
-    borderColor: PRIMARY,
+  acceptedBTN: {
+    width: RF(80),
+    marginTop: RF(0),
+    height: RF(25),
+    borderRadius: RF(5),
+  },
+  rejectedBTN: {
+    width: RF(80),
+    marginTop: RF(0),
+    height: RF(25),
+    borderRadius: RF(5),
+    backgroundColor: COLORS.RED,
+    borderColor: COLORS.RED,
+    opacity: 0.6,
   },
 });

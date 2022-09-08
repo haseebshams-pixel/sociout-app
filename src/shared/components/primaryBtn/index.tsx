@@ -25,6 +25,7 @@ interface Props {
   tintColor: string;
   loader: boolean;
   loaderColor: string;
+  disableColor: string;
 }
 
 const PrimaryBtn = ({
@@ -36,7 +37,8 @@ const PrimaryBtn = ({
   disabled = false,
   sticky,
   leftIcon,
-  bgColor = disabled ? PRIMARY_LIGHT : PRIMARY,
+  bgColor,
+  disableColor,
   flex,
   customContainerStyle,
   leftIconStyle,
@@ -56,7 +58,18 @@ const PrimaryBtn = ({
       <TouchableOpacity
         style={[
           styles.container,
-          {backgroundColor: bgColor, borderColor: bgColor},
+          {
+            backgroundColor: disabled
+              ? disableColor
+                ? disableColor
+                : PRIMARY_LIGHT
+              : PRIMARY,
+            borderColor: disabled
+              ? disableColor
+                ? disableColor
+                : PRIMARY_LIGHT
+              : PRIMARY,
+          },
           customStyle,
         ]}
         onPress={onPress}

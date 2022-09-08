@@ -8,13 +8,15 @@ const ENDPOINTS = {
   LIKEPOST: 'likes/like',
   DISLIKEPOST: 'likes/unlike/',
   SHAREPOST: 'posts/share',
-  GETUSERPOST: 'posts/user/',
+  GETUSERPOST: 'posts/user/skiping',
   GETUSERFRIENDS: 'friends/user/',
   GETUSERREQUESTS: 'friends/pending',
   REMOVEFRIEND: 'friends/remove/',
   SENDREQUEST: 'friends/request/',
   ACCEPTREQUEST: 'friends/confirm/',
   REJECTREQUEST: 'friends/reject/',
+  USERSOCIALNETWORK: 'friends/user/socialCircle/',
+  GETFRIENDSHIPSTATUS: 'friends/check/',
 };
 
 export {BASE_URL, ENDPOINTS};

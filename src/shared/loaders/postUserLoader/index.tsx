@@ -1,11 +1,12 @@
+import {RF} from '@theme/responsive';
 import React from 'react';
 import ContentLoader, {Rect, Circle} from 'react-content-loader/native';
 
 const PostUserLoader = (props: any) => (
   <ContentLoader
     speed={1}
-    width={200}
-    height={50}
+    width={RF(200)}
+    height={RF(50)}
     Duration={2000}
     viewBox="0 0 200 50"
     backgroundColor="#d9d9d9"

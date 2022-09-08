@@ -8,20 +8,27 @@ import PrimaryBtn from '@components/primaryBtn';
 import ShareModalize from '@components/shareModalize';
 import Wrapper from '@components/wrapper';
 import {resetBottomTab, setBottomTab} from '@redux/reducers/bottomTabSlice';
+import {resetFriends, setFriends} from '@redux/reducers/friendsSlice';
+import {resetRequests, setRequests} from '@redux/reducers/requestsSlice';
 import {navigate} from '@services/navService';
 import {sharePost} from '@services/postService';
 import {
+  acceptRequest,
+  getFriendShipStatus,
   getUser,
   getUserFriends,
   getUserPost,
-  getUserRequests,
+  getUserSocialNetwork,
+  rejectRequest,
+  removeFriend,
+  sendRequest,
 } from '@services/userService';
 import {COLORS} from '@theme/colors';
 import {GST} from '@theme/globalStyles';
 import {HP, RF, WP} from '@theme/responsive';
 import {ROUTES} from '@utils/routes';
 import React, {useEffect, useRef, useState} from 'react';
-import {DevSettings, StatusBar, View} from 'react-native';
+import {StatusBar, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {FlatList} from 'react-native';
 import {Modalize} from 'react-native-modalize';
@@ -31,15 +38,16 @@ import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import {SkypeIndicator} from 'react-native-indicators';
 import {showToast} from '@services/helperService';
 import ProfileLoader from '@loaders/profileLoader';
-import PostContentLoader from '@loaders/postContentLoader';
 import UserInfoLoader from '@loaders/userInfoLoader';
 // create a component
 const Profile = ({route, navigation}: any) => {
   //states
-  const {user} = useSelector((state: any) => state.root);
+  const {user, friends, requests} = useSelector((state: any) => state.root);
   const [posts, setPosts] = useState<any>([]);
-  const [friends, setFriends] = useState<any>([]);
-  const [requests, setRequests] = useState<any>([]);
+  const [skip, setSkip] = useState(0);
+  const [bottomLoader, setBottomLoader] = useState(false);
+  const [endReached, setEndReached] = useState(false);
+  const [currentUserFriends, setCurrentFriends] = useState<any>([]);
   const dispatch = useDispatch();
   const modalizeRef = useRef<Modalize>(null);
   const [sharePostData, setSharePost] = useState<any>({});
@@ -47,6 +55,9 @@ const Profile = ({route, navigation}: any) => {
   const [loader, setLoader] = useState(true);
   const [currentUser, setCurrentUser] = useState<any>({});
   const [userLoader, setUserLoader] = useState<any>(false);
+  const [friendShipStatus, setFriendShipStatus] = useState<string>('');
+  const [loader2, setLoader2] = useState(false);
+  const [rejectLoader, setRejectLoader] = useState(false);
 
   //modalize functions
   const onOpen = () => {
@@ -59,26 +70,34 @@ const Profile = ({route, navigation}: any) => {
   };
 
   //apis
-  const getPosts = (id: string) => {
-    setPosts([]);
-    getUserPost(id)
+  const getPosts = (id: string, skip: number, isRefreshing: boolean) => {
+    getUserPost(id, skip)
       .then(({data}: any) => {
-        setPosts(data);
+        if (isRefreshing) {
+          setPosts(data);
+        } else {
+          setPosts((p: string | any[]) => {
+            return p.concat(data);
+          });
+        }
       })
       .catch(err => {
         console.log('Error', err);
       })
       .finally(() => {
-        setRefresh(false);
         setLoader(false);
+        setBottomLoader(false);
+        setRefresh(false);
       });
   };
 
-  const getFriends = (id: string) => {
-    setFriends([]);
-    getUserFriends(id)
+  const getSocialNetwork = (id: string) => {
+    dispatch(resetFriends());
+    dispatch(resetRequests());
+    getUserSocialNetwork(id)
       .then(({data}: any) => {
-        setFriends(data);
+        dispatch(setFriends({friends: data?.friends}));
+        dispatch(setRequests({requests: data?.pending}));
       })
       .catch(err => {
         console.log('Error', err);
@@ -86,11 +105,11 @@ const Profile = ({route, navigation}: any) => {
       .finally(() => {});
   };
 
-  const getRequests = () => {
-    setRequests([]);
-    getUserRequests()
+  const getFriends = (id: string) => {
+    setCurrentFriends([]);
+    getUserFriends(route?.params.id)
       .then(({data}: any) => {
-        setRequests(data);
+        setCurrentFriends(data);
       })
       .catch(err => {
         console.log('Error', err);
@@ -128,32 +147,95 @@ const Profile = ({route, navigation}: any) => {
       });
   };
 
-  //useEffects
+  const fetchFriendShipStatus = async (id: string) => {
+    getFriendShipStatus(id)
+      .then(({data}: any) => {
+        setFriendShipStatus(data.state);
+      })
+      .catch(err => {
+        console.log('Error', err);
+      })
+      .finally(() => {});
+  };
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      setLoader(true);
-      getFriends(route?.params?.id);
-      if (user?.user?.id == route?.params?.id) {
-        getRequests();
-      }
-      fetchUser(route?.params?.id);
-      getPosts(route?.params?.id);
-    });
+  const handleRemove = () => {
+    setLoader2(true);
+    removeFriend(route?.params?.id)
+      .then(({res}: any) => {
+        setFriendShipStatus('notfriend');
+        var filterArr = friends?.friends?.filter((item: any) => {
+          return item?._id != route?.params?.id;
+        });
+        dispatch(setFriends({friends: filterArr}));
+        showToast('Success', 'Friend Removed', true);
+      })
+      .catch(err => {
+        console.log('Error', err);
+      })
+      .finally(() => {
+        setLoader2(false);
+      });
+  };
 
-    return unsubscribe;
-  }, [navigation, route?.params?.id]);
+  const handleAdd = () => {
+    setLoader2(true);
+    sendRequest(route?.params?.id)
+      .then(({res}: any) => {
+        setFriendShipStatus('requested');
+        showToast('Success', 'Request Sent', true);
+      })
+      .catch(err => {
+        console.log('Error', err);
+      })
+      .finally(() => {
+        setLoader2(false);
+      });
+  };
 
-  return (
-    <Wrapper noPaddingBottom>
-      <StatusBar translucent barStyle={'dark-content'} />
-      <Header
-        title={'Profile'}
-        rightIcon={user?.user?.id == route?.params?.id ? settingIcon : null}
-        leftIcon={user?.user?.id != route?.params?.id}
-        onPress={() => navigate(ROUTES.SETTING)}
-      />
-      <View style={[GST.FLEX, styles.container]}>
+  const handleReject = () => {
+    setRejectLoader(true);
+    rejectRequest(route?.params?.id)
+      .then(({res}: any) => {
+        setFriendShipStatus('notfriend');
+        var filterArr = requests?.requests?.filter((item: any) => {
+          return item?._id != route?.params?.id;
+        });
+        dispatch(setRequests({requests: filterArr}));
+        showToast('Success', 'Friend Request Rejected', true);
+      })
+      .catch(err => {
+        console.log('Error', err);
+      })
+      .finally(() => {
+        setRejectLoader(false);
+      });
+  };
+  const handleConfirm = () => {
+    setLoader2(true);
+    acceptRequest(route?.params?.id)
+      .then(({res}: any) => {
+        setFriendShipStatus('friend');
+        var filterArr = requests?.requests?.filter((item: any) => {
+          return item?._id != route?.params?.id;
+        });
+        var temp = [...friends?.friends];
+        temp.push(currentUser);
+        dispatch(setFriends({friends: temp}));
+        dispatch(setRequests({requests: filterArr}));
+        showToast('Success', 'Friend Request Accepted', true);
+      })
+      .catch(err => {
+        console.log('Error', err);
+      })
+      .finally(() => {
+        setLoader2(false);
+      });
+  };
+
+  //Components for flatlist
+  const HeaderComponent = () => {
+    return (
+      <>
         <View style={[styles.headerContainer, GST.pl3, GST.pr3]}>
           <View style={[GST.FLEX_ROW, GST.mb2]}>
             {userLoader ? (
@@ -184,20 +266,35 @@ const Profile = ({route, navigation}: any) => {
               </View>
               <TouchableWithoutFeedback
                 style={[{alignItems: 'center'}]}
-                disabled={friends?.length == 0}
-                onPress={() => navigation.push(ROUTES.FRIENDS, friends)}>
+                disabled={
+                  route?.params?.id == user?.user?.id
+                    ? friends?.friends?.length < 1
+                    : currentUserFriends?.length < 1
+                }
+                onPress={() =>
+                  navigation.push(ROUTES.FRIENDS, {
+                    friends: currentUserFriends,
+                    id: route?.params?.id,
+                  })
+                }>
                 <CustomText size={14} bold>
-                  {friends?.length}
+                  {route?.params?.id == user?.user?.id
+                    ? friends?.friends?.length
+                    : currentUserFriends?.length}
                 </CustomText>
                 <CustomText size={14}>Friends</CustomText>
               </TouchableWithoutFeedback>
               {user?.user?.id == route?.params?.id && (
                 <TouchableWithoutFeedback
                   style={[{alignItems: 'center'}]}
-                  onPress={() => navigate(ROUTES.REQUESTS)}
-                  disabled={requests?.length == 0}>
+                  onPress={() =>
+                    navigate(ROUTES.REQUESTS, {
+                      id: route?.params?.id,
+                    })
+                  }
+                  disabled={requests?.requests?.length < 1}>
                   <CustomText size={14} bold>
-                    {requests?.length}
+                    {requests?.requests?.length}
                   </CustomText>
                   <CustomText size={14}>Requests</CustomText>
                 </TouchableWithoutFeedback>
@@ -211,7 +308,9 @@ const Profile = ({route, navigation}: any) => {
               <CustomText size={14} style={[GST.mb1]} bold>
                 {currentUser?.firstname} {currentUser?.lastname}
               </CustomText>
-              <CustomText size={13}>{currentUser?.bio}</CustomText>
+              {currentUser?.bio && (
+                <CustomText size={13}>{currentUser?.bio}</CustomText>
+              )}
             </>
           )}
 
@@ -221,46 +320,166 @@ const Profile = ({route, navigation}: any) => {
               titleSize={14}
               customStyle={[styles.editbtn]}
             />
-          ) : (
+          ) : friendShipStatus == 'notfriend' ? (
             <PrimaryBtn
               title="Add Friend"
               titleSize={14}
+              loader={loader2}
+              customStyle={[styles.editbtn]}
+              onPress={() => handleAdd()}
+            />
+          ) : friendShipStatus == 'friend' ? (
+            <PrimaryBtn
+              title="Remove"
+              titleSize={14}
+              loader={loader2}
+              customStyle={[styles.removebtn]}
+              onPress={() => handleRemove()}
+            />
+          ) : friendShipStatus == 'requested' ? (
+            <PrimaryBtn
+              title="Requested"
+              disabled
+              titleSize={14}
+              customStyle={[styles.editbtn]}
+            />
+          ) : friendShipStatus == 'pending' ? (
+            <View style={[GST.FLEX_ROW_SPACE]}>
+              <PrimaryBtn
+                title="Confirm"
+                titleSize={14}
+                loader={loader2}
+                onPress={() => handleConfirm()}
+                customStyle={[styles.confirmbtn]}
+              />
+              <PrimaryBtn
+                title="Remove"
+                titleSize={14}
+                loader={rejectLoader}
+                onPress={() => handleReject()}
+                customStyle={[styles.rejectbtn]}
+              />
+            </View>
+          ) : (
+            <PrimaryBtn
+              disabled={friendShipStatus == ''}
+              titleSize={25}
+              loader
               customStyle={[styles.editbtn]}
             />
           )}
         </View>
+        <View style={[GST.mt2]} />
+      </>
+    );
+  };
+
+  const EmptyComponent = () => {
+    return (
+      <>
         {loader ? (
           <SkypeIndicator />
         ) : (
-          <>
-            <FlatList
-              renderItem={({item}: any) => (
-                <PostCard
-                  item={item}
-                  onOpen={onOpen}
-                  setSharePost={setSharePost}
-                />
-              )}
-              data={posts}
-              refreshing={refresh}
-              onRefresh={() => {
-                setRefresh(true);
-                setPosts([]);
-                getPosts(route?.params?.id);
-              }}
-              ListHeaderComponent={() =>
-                posts?.length == 0 && !refresh ? (
-                  <CustomText style={[GST.mt4]} size={14}>
-                    No Post found!
-                  </CustomText>
-                ) : (
-                  <View style={[GST.mt2]} />
-                )
-              }
-              ListHeaderComponentStyle={[styles.listHeader]}
-            />
-          </>
+          posts?.length == 0 &&
+          !refresh && (
+            <View style={[styles.listHeader]}>
+              <CustomText style={[GST.mt4]} size={14}>
+                No Post found!
+              </CustomText>
+            </View>
+          )
         )}
+      </>
+    );
+  };
+
+  const FooterComponent = () => {
+    if (bottomLoader && !refresh && !loader) {
+      return (
+        <SkypeIndicator
+          size={RF(20)}
+          color={COLORS.BLACK}
+          style={[GST.mt3, GST.mb3]}
+        />
+      );
+    } else {
+      return null;
+    }
+  };
+
+  //useEffects
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      if (user?.user?.id != route?.params?.id) {
+        fetchFriendShipStatus(route?.params?.id);
+        getFriends(route?.params?.id);
+      } else {
+        getSocialNetwork(route?.params?.id);
+      }
+      setLoader(true);
+      setPosts([]);
+      fetchUser(route?.params?.id);
+      getPosts(route?.params?.id, 0, false);
+      setSkip(0);
+    });
+
+    return unsubscribe;
+  }, [navigation, route?.params?.id]);
+
+  return (
+    <Wrapper noPaddingBottom>
+      <StatusBar translucent barStyle={'dark-content'} />
+      <Header
+        title={'Profile'}
+        rightIcon={user?.user?.id == route?.params?.id ? settingIcon : null}
+        leftIcon={user?.user?.id != route?.params?.id}
+        onPress={() => navigate(ROUTES.SETTING)}
+      />
+      <View style={[GST.FLEX, styles.container]}>
+        <>
+          <FlatList
+            renderItem={({item}: any) => (
+              <PostCard
+                item={item}
+                onOpen={onOpen}
+                setSharePost={setSharePost}
+              />
+            )}
+            data={posts}
+            onEndReached={() => {
+              if (endReached && !refresh && bottomLoader) {
+                let k = skip + 3;
+                setSkip(k);
+                getPosts(route?.params?.id, k, false);
+                setEndReached(false);
+              }
+            }}
+            onMomentumScrollBegin={() => {
+              setBottomLoader(true);
+              setEndReached(true);
+            }}
+            refreshing={refresh}
+            onRefresh={() => {
+              if (user?.user?.id != route?.params?.id) {
+                fetchFriendShipStatus(route?.params?.id);
+                getFriends(route?.params?.id);
+              } else {
+                getSocialNetwork(route?.params?.id);
+              }
+              setBottomLoader(false);
+              setEndReached(false);
+              setRefresh(true);
+              fetchUser(route?.params?.id);
+              setSkip(0);
+              getPosts(route?.params?.id, 0, true);
+            }}
+            ListHeaderComponent={HeaderComponent}
+            ListEmptyComponent={EmptyComponent}
+            stickyHeaderIndices={[0]}
+            ListFooterComponent={FooterComponent}
+          />
+        </>
       </View>
       <ShareModalize
         modalizeRef={modalizeRef}

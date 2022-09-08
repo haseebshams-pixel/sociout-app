@@ -1,6 +1,6 @@
 import {COLORS} from '@theme/colors';
 import {GST} from '@theme/globalStyles';
-import {RF} from '@theme/responsive';
+import {RF, WP} from '@theme/responsive';
 import {StyleSheet} from 'react-native';
 
 const {LIGHT_GRAY, WHITE} = COLORS;
@@ -12,7 +12,8 @@ export const styles = StyleSheet.create({
   },
   headerContainer: {
     backgroundColor: WHITE,
-    height: RF(170),
+    ...GST.pb2,
+    ...GST.pt2,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.LIGHT_GRAY,
   },
@@ -22,8 +23,27 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     flex: 1,
     ...GST.pl4,
+    ...GST.pr1,
   },
 
   editbtn: {height: RF(35), borderRadius: RF(3)},
-  listHeader: {alignItems: 'center', justifyContent: 'center', flexGrow: 1},
+  removebtn: {
+    height: RF(35),
+    borderRadius: RF(3),
+    backgroundColor: COLORS.RED,
+    borderColor: COLORS.RED,
+  },
+  rejectbtn: {
+    height: RF(35),
+    width: WP(45),
+    borderRadius: RF(3),
+    backgroundColor: COLORS.RED,
+    borderColor: COLORS.RED,
+  },
+  confirmbtn: {
+    height: RF(35),
+    width: WP(45),
+    borderRadius: RF(3),
+  },
+  listHeader: {alignItems: 'center', justifyContent: 'center', flex: 1},
 });
