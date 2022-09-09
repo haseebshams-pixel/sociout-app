@@ -3,12 +3,13 @@ import {GST} from '@theme/globalStyles';
 import {RF, WP} from '@theme/responsive';
 import {StyleSheet} from 'react-native';
 
-const {LIGHT_GRAY, WHITE} = COLORS;
+const {SECONDARY_LIGHT_GRAY, WHITE} = COLORS;
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: LIGHT_GRAY,
+    backgroundColor: SECONDARY_LIGHT_GRAY,
+    position: 'relative',
   },
   headerContainer: {
     backgroundColor: WHITE,
@@ -46,4 +47,11 @@ export const styles = StyleSheet.create({
     borderRadius: RF(3),
   },
   listHeader: {alignItems: 'center', justifyContent: 'center', flex: 1},
+  header: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    width: '100%',
+    zIndex: 1,
+  },
 });

@@ -28,7 +28,7 @@ import {GST} from '@theme/globalStyles';
 import {HP, RF, WP} from '@theme/responsive';
 import {ROUTES} from '@utils/routes';
 import React, {useEffect, useRef, useState} from 'react';
-import {StatusBar, View} from 'react-native';
+import {Animated, StatusBar, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {FlatList} from 'react-native';
 import {Modalize} from 'react-native-modalize';
@@ -39,25 +39,30 @@ import {SkypeIndicator} from 'react-native-indicators';
 import {showToast} from '@services/helperService';
 import ProfileLoader from '@loaders/profileLoader';
 import UserInfoLoader from '@loaders/userInfoLoader';
+import {getCloser} from '@utils/helper';
+import CustomAlert from '@components/customAlert';
+import EditProfile from './editProfileModal';
 // create a component
 const Profile = ({route, navigation}: any) => {
   //states
   const {user, friends, requests} = useSelector((state: any) => state.root);
   const [posts, setPosts] = useState<any>([]);
-  const [skip, setSkip] = useState(0);
-  const [bottomLoader, setBottomLoader] = useState(false);
-  const [endReached, setEndReached] = useState(false);
+  const [skip, setSkip] = useState<number>(0);
+  const [bottomLoader, setBottomLoader] = useState<boolean>(false);
+  const [endReached, setEndReached] = useState<boolean>(false);
   const [currentUserFriends, setCurrentFriends] = useState<any>([]);
   const dispatch = useDispatch();
   const modalizeRef = useRef<Modalize>(null);
   const [sharePostData, setSharePost] = useState<any>({});
-  const [refresh, setRefresh] = useState(false);
-  const [loader, setLoader] = useState(true);
+  const [refresh, setRefresh] = useState<boolean>(false);
+  const [loader, setLoader] = useState<boolean>(true);
   const [currentUser, setCurrentUser] = useState<any>({});
-  const [userLoader, setUserLoader] = useState<any>(false);
+  const [userLoader, setUserLoader] = useState<boolean>(false);
   const [friendShipStatus, setFriendShipStatus] = useState<string>('');
-  const [loader2, setLoader2] = useState(false);
-  const [rejectLoader, setRejectLoader] = useState(false);
+  const [loader2, setLoader2] = useState<boolean>(false);
+  const [rejectLoader, setRejectLoader] = useState<boolean>(false);
+  const [openAlert, setOpenAlert] = useState<boolean>(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   //modalize functions
   const onOpen = () => {
@@ -159,6 +164,7 @@ const Profile = ({route, navigation}: any) => {
   };
 
   const handleRemove = () => {
+    setOpenAlert(false);
     setLoader2(true);
     removeFriend(route?.params?.id)
       .then(({res}: any) => {
@@ -210,6 +216,7 @@ const Profile = ({route, navigation}: any) => {
         setRejectLoader(false);
       });
   };
+
   const handleConfirm = () => {
     setLoader2(true);
     acceptRequest(route?.params?.id)
@@ -313,17 +320,17 @@ const Profile = ({route, navigation}: any) => {
               )}
             </>
           )}
-
           {user?.user?.id == route?.params?.id ? (
             <PrimaryBtn
               title="Edit Profile"
               titleSize={14}
+              onPress={() => setModalVisible(true)}
               customStyle={[styles.editbtn]}
             />
           ) : friendShipStatus == 'notfriend' ? (
             <PrimaryBtn
               title="Add Friend"
-              titleSize={14}
+              titleSize={15}
               loader={loader2}
               customStyle={[styles.editbtn]}
               onPress={() => handleAdd()}
@@ -331,10 +338,10 @@ const Profile = ({route, navigation}: any) => {
           ) : friendShipStatus == 'friend' ? (
             <PrimaryBtn
               title="Remove"
-              titleSize={14}
+              titleSize={15}
               loader={loader2}
               customStyle={[styles.removebtn]}
-              onPress={() => handleRemove()}
+              onPress={() => setOpenAlert(true)}
             />
           ) : friendShipStatus == 'requested' ? (
             <PrimaryBtn
@@ -369,7 +376,7 @@ const Profile = ({route, navigation}: any) => {
             />
           )}
         </View>
-        <View style={[GST.mt2]} />
+        <View style={[GST.mt1]} />
       </>
     );
   };
@@ -408,7 +415,6 @@ const Profile = ({route, navigation}: any) => {
   };
 
   //useEffects
-
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       if (user?.user?.id != route?.params?.id) {
@@ -438,7 +444,7 @@ const Profile = ({route, navigation}: any) => {
       />
       <View style={[GST.FLEX, styles.container]}>
         <>
-          <FlatList
+          <Animated.FlatList
             renderItem={({item}: any) => (
               <PostCard
                 item={item}
@@ -486,6 +492,18 @@ const Profile = ({route, navigation}: any) => {
         onClose={onClose}
         handleShare={handleShare}
         sharePostData={sharePostData}
+      />
+      <CustomAlert
+        open={openAlert}
+        closeAlert={() => setOpenAlert(false)}
+        title={'Remove Friend'}
+        desc={'Are you sure you want to remove this friend? '}
+        actionBtnTitle={'Yes, Remove'}
+        action={handleRemove}
+      />
+      <EditProfile
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
       />
     </Wrapper>
   );

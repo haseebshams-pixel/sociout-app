@@ -1,5 +1,6 @@
 //import liraries
 import {profilePlaceholder} from '@assets/images';
+import CustomAlert from '@components/customAlert';
 import CustomText from '@components/customText';
 import Header from '@components/header';
 import PrimaryBtn from '@components/primaryBtn';
@@ -33,8 +34,11 @@ const Item = ({item, navigation, user, id}: any) => {
   const [loader, setLoader] = useState(false);
   const [loader2, setLoader2] = useState(false);
   const {friends, requests} = useSelector((state: any) => state.root);
+  const [openAlert, setOpenAlert] = useState<boolean>(false);
   const dispatch = useDispatch();
+
   const handleRemove = () => {
+    setOpenAlert(false);
     setLoader(true);
     removeFriend(item?._id)
       .then(({res}: any) => {
@@ -156,7 +160,7 @@ const Item = ({item, navigation, user, id}: any) => {
         status2 == 'friend' ? (
           <PrimaryBtn
             title="Remove"
-            onPress={() => handleRemove()}
+            onPress={() => setOpenAlert(true)}
             loader={loader}
             loaderColor={COLORS.WHITE}
             customStyle={[styles.removeBTN]}
@@ -184,7 +188,7 @@ const Item = ({item, navigation, user, id}: any) => {
       ) : status == 'friend' ? (
         <PrimaryBtn
           title="Remove"
-          onPress={() => handleRemove()}
+          onPress={() => setOpenAlert(true)}
           loader={loader}
           loaderColor={COLORS.WHITE}
           customStyle={[styles.removeBTN]}
@@ -251,6 +255,14 @@ const Item = ({item, navigation, user, id}: any) => {
           />
         )
       )}
+      <CustomAlert
+        open={openAlert}
+        closeAlert={() => setOpenAlert(false)}
+        title={'Remove Friend'}
+        desc={'Are you sure you want to remove this friend? '}
+        actionBtnTitle={'Yes, Remove'}
+        action={handleRemove}
+      />
     </View>
   );
 };

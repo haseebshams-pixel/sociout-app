@@ -21,6 +21,9 @@ interface viewProp extends ViewProps {
   color?: any;
   borderBottom: boolean;
   backAction: any;
+  rightAction: any;
+  leftText: string;
+  rightText: string;
 }
 
 const Header = (props: Partial<viewProp>) => {
@@ -36,6 +39,9 @@ const Header = (props: Partial<viewProp>) => {
     color,
     borderBottom,
     backAction,
+    rightAction,
+    leftText,
+    rightText,
   } = props;
 
   return (
@@ -50,6 +56,11 @@ const Header = (props: Partial<viewProp>) => {
       ]}>
       <View style={styles.subContainer}>
         <View style={{backgroundColor: iconColor}}>
+          {leftText && (
+            <Pressable onPress={backAction}>
+              <CustomText>{leftText}</CustomText>
+            </Pressable>
+          )}
           {leftIcon ? (
             <BackButton color={color} backAction={backAction} />
           ) : null}
@@ -61,6 +72,11 @@ const Header = (props: Partial<viewProp>) => {
         </CustomText>
       </View>
       <View style={styles.lastContainer}>
+        {rightText && (
+          <Pressable onPress={rightAction}>
+            <CustomText color={COLORS.PRIMARY}>{rightText}</CustomText>
+          </Pressable>
+        )}
         {rightIcon && (
           <Pressable
             onPress={onPress}
@@ -95,14 +111,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     ...GST.py4,
     ...GST.px3,
+    position: 'relative',
   },
-  subContainer: {flex: 0.1},
+  subContainer: {flex: 0.2},
   middleContainer: {
-    flex: 0.8,
+    flex: 0.6,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  lastContainer: {flex: 0.1},
+  lastContainer: {flex: 0.2, alignItems: 'flex-end'},
   subLastContainer: {
     flexDirection: 'row',
     marginLeft: -30,
