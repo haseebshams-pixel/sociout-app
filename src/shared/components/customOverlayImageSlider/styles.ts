@@ -12,7 +12,7 @@ export const styles = StyleSheet.create({
   image: {
     width: WP(100),
     height: RF(200),
-    resizeMode: 'contain',
+    resizeMode: 'cover',
   },
   listContainer: {
     justifyContent: 'center',

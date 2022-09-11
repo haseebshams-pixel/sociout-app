@@ -17,8 +17,8 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   userPhoto: {
-    width: RF(30),
-    height: RF(30),
+    width: RF(40),
+    height: RF(40),
     resizeMode: 'contain',
     borderRadius: RF(100),
   },
