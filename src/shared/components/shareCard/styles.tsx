@@ -15,7 +15,6 @@ export const styles = StyleSheet.create({
   userInfoContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    ...GST.mb3,
   },
   userPhoto: {
     width: RF(30),

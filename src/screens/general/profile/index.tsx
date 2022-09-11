@@ -5,13 +5,10 @@ import CustomText from '@components/customText';
 import Header from '@components/header';
 import PostCard from '@components/postCard';
 import PrimaryBtn from '@components/primaryBtn';
-import ShareModalize from '@components/shareModalize';
 import Wrapper from '@components/wrapper';
-import {resetBottomTab, setBottomTab} from '@redux/reducers/bottomTabSlice';
 import {resetFriends, setFriends} from '@redux/reducers/friendsSlice';
 import {resetRequests, setRequests} from '@redux/reducers/requestsSlice';
 import {navigate} from '@services/navService';
-import {sharePost} from '@services/postService';
 import {
   acceptRequest,
   getFriendShipStatus,
@@ -30,8 +27,6 @@ import {ROUTES} from '@utils/routes';
 import React, {useEffect, useRef, useState} from 'react';
 import {Animated, StatusBar, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {FlatList} from 'react-native';
-import {Modalize} from 'react-native-modalize';
 import {useDispatch, useSelector} from 'react-redux';
 import {styles} from './styles';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
@@ -39,9 +34,9 @@ import {SkypeIndicator} from 'react-native-indicators';
 import {showToast} from '@services/helperService';
 import ProfileLoader from '@loaders/profileLoader';
 import UserInfoLoader from '@loaders/userInfoLoader';
-import {getCloser} from '@utils/helper';
 import CustomAlert from '@components/customAlert';
 import EditProfile from './editProfileModal';
+import CustomLoading from '@components/customLoading';
 // create a component
 const Profile = ({route, navigation}: any) => {
   //states
@@ -52,8 +47,6 @@ const Profile = ({route, navigation}: any) => {
   const [endReached, setEndReached] = useState<boolean>(false);
   const [currentUserFriends, setCurrentFriends] = useState<any>([]);
   const dispatch = useDispatch();
-  const modalizeRef = useRef<Modalize>(null);
-  const [sharePostData, setSharePost] = useState<any>({});
   const [refresh, setRefresh] = useState<boolean>(false);
   const [loader, setLoader] = useState<boolean>(true);
   const [currentUser, setCurrentUser] = useState<any>({});
@@ -65,14 +58,6 @@ const Profile = ({route, navigation}: any) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   //modalize functions
-  const onOpen = () => {
-    dispatch(setBottomTab({isDisplay: false}));
-    modalizeRef.current?.open();
-  };
-
-  const onClose = () => {
-    dispatch(resetBottomTab());
-  };
 
   //apis
   const getPosts = (id: string, skip: number, isRefreshing: boolean) => {
@@ -122,22 +107,6 @@ const Profile = ({route, navigation}: any) => {
       .finally(() => {});
   };
 
-  const handleShare = () => {
-    let obj = {
-      id: sharePostData?.item?.PostObject[0]?._id,
-    };
-    sharePost(obj)
-      .then(() => {
-        onClose();
-        modalizeRef.current?.close();
-        showToast('Success', 'Shared Successfuly!', true);
-      })
-      .catch(err => {
-        console.log('Error', err);
-      })
-      .finally(() => {});
-  };
-
   const fetchUser = async (id: string) => {
     setUserLoader(true);
     getUser(id)
@@ -165,7 +134,7 @@ const Profile = ({route, navigation}: any) => {
 
   const handleRemove = () => {
     setOpenAlert(false);
-    setLoader2(true);
+    setRejectLoader(true);
     removeFriend(route?.params?.id)
       .then(({res}: any) => {
         setFriendShipStatus('notfriend');
@@ -179,7 +148,7 @@ const Profile = ({route, navigation}: any) => {
         console.log('Error', err);
       })
       .finally(() => {
-        setLoader2(false);
+        setRejectLoader(false);
       });
   };
 
@@ -336,13 +305,21 @@ const Profile = ({route, navigation}: any) => {
               onPress={() => handleAdd()}
             />
           ) : friendShipStatus == 'friend' ? (
-            <PrimaryBtn
-              title="Remove"
-              titleSize={15}
-              loader={loader2}
-              customStyle={[styles.removebtn]}
-              onPress={() => setOpenAlert(true)}
-            />
+            <View style={[GST.FLEX_ROW_SPACE]}>
+              <PrimaryBtn
+                title="Message"
+                titleSize={15}
+                loader={loader2}
+                customStyle={[styles.confirmbtn]}
+              />
+              <PrimaryBtn
+                title="Remove"
+                titleSize={15}
+                loader={rejectLoader}
+                customStyle={[styles.removebtn]}
+                onPress={() => setOpenAlert(true)}
+              />
+            </View>
           ) : friendShipStatus == 'requested' ? (
             <PrimaryBtn
               title="Requested"
@@ -376,7 +353,6 @@ const Profile = ({route, navigation}: any) => {
             />
           )}
         </View>
-        <View style={[GST.mt1]} />
       </>
     );
   };
@@ -384,17 +360,12 @@ const Profile = ({route, navigation}: any) => {
   const EmptyComponent = () => {
     return (
       <>
-        {loader ? (
-          <SkypeIndicator />
-        ) : (
-          posts?.length == 0 &&
-          !refresh && (
-            <View style={[styles.listHeader]}>
-              <CustomText style={[GST.mt4]} size={14}>
-                No Post found!
-              </CustomText>
-            </View>
-          )
+        {!loader && posts?.length == 0 && !refresh && (
+          <View style={[styles.listHeader]}>
+            <CustomText style={[GST.mt4]} size={14}>
+              No Post found!
+            </CustomText>
+          </View>
         )}
       </>
     );
@@ -439,19 +410,13 @@ const Profile = ({route, navigation}: any) => {
       <Header
         title={'Profile'}
         rightIcon={user?.user?.id == route?.params?.id ? settingIcon : null}
-        leftIcon={user?.user?.id != route?.params?.id}
+        leftIcon
         onPress={() => navigate(ROUTES.SETTING)}
       />
       <View style={[GST.FLEX, styles.container]}>
         <>
           <Animated.FlatList
-            renderItem={({item}: any) => (
-              <PostCard
-                item={item}
-                onOpen={onOpen}
-                setSharePost={setSharePost}
-              />
-            )}
+            renderItem={({item}: any) => <PostCard item={item} />}
             data={posts}
             onEndReached={() => {
               if (endReached && !refresh && bottomLoader) {
@@ -482,17 +447,11 @@ const Profile = ({route, navigation}: any) => {
             }}
             ListHeaderComponent={HeaderComponent}
             ListEmptyComponent={EmptyComponent}
-            stickyHeaderIndices={[0]}
+            // stickyHeaderIndices={[0]}
             ListFooterComponent={FooterComponent}
           />
         </>
       </View>
-      <ShareModalize
-        modalizeRef={modalizeRef}
-        onClose={onClose}
-        handleShare={handleShare}
-        sharePostData={sharePostData}
-      />
       <CustomAlert
         open={openAlert}
         closeAlert={() => setOpenAlert(false)}
@@ -505,6 +464,7 @@ const Profile = ({route, navigation}: any) => {
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
       />
+      <CustomLoading visible={loader} />
     </Wrapper>
   );
 };

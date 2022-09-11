@@ -17,9 +17,12 @@ import PostContentLoader from '@loaders/postContentLoader';
 import ShareCard from '@components/shareCard';
 import moment from 'moment';
 import CustomOverlayImageSlider from '@components/customOverlayImageSlider';
-import {dislikePost, likePost} from '@services/postService';
+import {dislikePost, likePost, sharePost} from '@services/postService';
 import {showToast} from '@services/helperService';
 import {Modalize} from 'react-native-modalize';
+import ShareModalize from '@components/shareModalize';
+import CustomLoading from '@components/customLoading';
+
 //
 interface Props {
   item: {
@@ -66,8 +69,6 @@ interface Props {
       },
     ];
   };
-  setSharePost: any;
-  onOpen: any;
 }
 interface PostUserInterface {
   DOB: string;
@@ -80,7 +81,7 @@ interface PostUserInterface {
   phonenumber: string;
 }
 
-const PostCard = ({item, setSharePost, onOpen}: Props) => {
+const PostCard = ({item}: Props) => {
   const {user} = useSelector((state: any) => state.root.user);
   const [postUser, setPostUser] = useState<Partial<PostUserInterface>>();
   const [like, setLike] = useState(false);
@@ -89,9 +90,36 @@ const PostCard = ({item, setSharePost, onOpen}: Props) => {
   const [allcomments, setAllComments] = useState<any>([]);
   const [userLoader, setUserLoader] = useState(false);
   const [visible, setVisible] = useState(false);
+  const modalizeRef = useRef<Modalize>(null);
+  const [sharePostData, setSharePost] = useState<any>({});
+  const [loader, setLoader] = useState(false);
+
+  const onOpen = () => {
+    modalizeRef.current?.open();
+  };
 
   const toggleOverlay = () => {
     setVisible(!visible);
+  };
+
+  const handleShare = () => {
+    modalizeRef.current?.close();
+    setTimeout(() => {
+      setLoader(true);
+    }, 1000);
+    let obj = {
+      id: sharePostData?.item?.PostObject[0]?._id,
+    };
+    sharePost(obj)
+      .then(() => {
+        showToast('Success', 'Shared Successfuly!', true);
+      })
+      .catch(err => {
+        console.log('Error', err);
+      })
+      .finally(() => {
+        setLoader(false);
+      });
   };
 
   const fetchUser = async () => {
@@ -193,45 +221,43 @@ const PostCard = ({item, setSharePost, onOpen}: Props) => {
       ) : userLoader ? (
         <PostContentLoader />
       ) : (
-        <>
-          <CustomText size={15} style={[GST.mb4]}>
-            {item?.PostObject[0]?.text}
-          </CustomText>
+        <View>
+          {item?.PostObject[0]?.text && (
+            <CustomText size={15} style={[GST.mb4]}>
+              {item?.PostObject[0]?.text}
+            </CustomText>
+          )}
+
           {item?.PostObject[0]?.images?.length > 0 && (
-            <View style={[GST.CENTER_ALIGN, GST.mb4, {width: WP(80)}]}>
+            <View style={[GST.CENTER_ALIGN, GST.mb2, {width: WP(100)}]}>
               <CustomImageSlider
                 images={item?.PostObject[0]?.images}
                 onPress={toggleOverlay}
               />
             </View>
           )}
-        </>
+        </View>
       )}
-
-      <View style={[GST.FLEX_ROW_SPACE, GST.mb2]}>
-        <CustomText size={15}>
-          {likeCount} Like{likeCount > 1 || likeCount == 0 ? 's' : ''}
-        </CustomText>
-        <CustomText size={15}>
-          {commentCount} Comment
-          {commentCount > 1 || commentCount == 0 ? 's' : ''}
-        </CustomText>
-      </View>
-      <View style={[styles.seperator, GST.mb3]} />
       <View style={[GST.FLEX_ROW_SPACE]}>
-        <TouchableWithoutFeedback
-          onPress={!like ? handleLike : handleDisLike}
-          style={[{justifyContent: 'center'}]}>
-          {!like ? (
-            <Heart color={COLORS.BLACK} height={RF(15)} />
-          ) : (
-            <Heart color={COLORS.RED} fill={COLORS.RED} height={RF(15)} />
-          )}
-          <CustomText size={12}>Like</CustomText>
-        </TouchableWithoutFeedback>
-        <View style={[styles.iconContainer]}>
-          <MessageSquare color={COLORS.BLACK} height={RF(15)} />
-          <CustomText size={12}>Comment</CustomText>
+        <View style={[GST.FLEX_ROW_SPACE]}>
+          <TouchableWithoutFeedback
+            onPress={!like ? handleLike : handleDisLike}
+            style={[{justifyContent: 'center'}, GST.FLEX_ROW]}>
+            {!like ? (
+              <Heart color={COLORS.BLACK} height={RF(20)} />
+            ) : (
+              <Heart
+                color={COLORS.PRIMARY}
+                fill={COLORS.PRIMARY}
+                height={RF(20)}
+              />
+            )}
+            <CustomText size={13}>{likeCount}</CustomText>
+          </TouchableWithoutFeedback>
+          <View style={[GST.FLEX_ROW, GST.ml2]}>
+            <MessageSquare color={COLORS.BLACK} height={RF(20)} />
+            <CustomText size={13}>{commentCount}</CustomText>
+          </View>
         </View>
         {!item?.PostObject[0]?.isShared && (
           <TouchableWithoutFeedback
@@ -243,8 +269,7 @@ const PostCard = ({item, setSharePost, onOpen}: Props) => {
               });
               onOpen();
             }}>
-            <Share color={COLORS.BLACK} height={RF(15)} />
-            <CustomText size={12}>Share</CustomText>
+            <Share color={COLORS.BLACK} height={RF(20)} />
           </TouchableWithoutFeedback>
         )}
       </View>
@@ -255,6 +280,13 @@ const PostCard = ({item, setSharePost, onOpen}: Props) => {
           toggleOverlay={toggleOverlay}
         />
       )}
+      <ShareModalize
+        modalizeRef={modalizeRef}
+        handleShare={handleShare}
+        sharePostData={sharePostData}
+      />
+
+      {!!loader && <CustomLoading visible={loader} />}
     </View>
   );
 };

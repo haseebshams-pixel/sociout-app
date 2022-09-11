@@ -15,7 +15,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  profilePic: {height: RF(35), width: RF(35), borderRadius: RF(100)},
+  profilePic: {height: RF(40), width: RF(40), borderRadius: RF(100)},
   removeBTN: {
     width: RF(55),
     marginTop: RF(0),

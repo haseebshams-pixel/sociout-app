@@ -8,15 +8,13 @@ const {SECONDARY_LIGHT_GRAY, WHITE} = COLORS;
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: SECONDARY_LIGHT_GRAY,
+    backgroundColor: WHITE,
     position: 'relative',
   },
   headerContainer: {
     backgroundColor: WHITE,
     ...GST.pb2,
     ...GST.pt2,
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.LIGHT_GRAY,
   },
   profilePhoto: {height: RF(70), width: RF(70), borderRadius: RF(100)},
   userInfoContainer: {
@@ -29,6 +27,7 @@ export const styles = StyleSheet.create({
 
   editbtn: {height: RF(35), borderRadius: RF(3)},
   removebtn: {
+    width: WP(45),
     height: RF(35),
     borderRadius: RF(3),
     backgroundColor: COLORS.RED,

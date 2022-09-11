@@ -27,4 +27,7 @@ export const ROUTES = {
   SETTING: 'setting',
   FRIENDS: 'friends',
   REQUESTS: 'requests',
+
+  //jobs stack
+  JOBS: 'Jobs',
 };

@@ -7,16 +7,15 @@ export const styles = StyleSheet.create({
   container: {
     backgroundColor: COLORS.WHITE,
     padding: RF(15),
-    ...GST.mb2,
   },
   userInfoContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    ...GST.mb3,
+    ...GST.mb2,
   },
   userPhoto: {
-    width: RF(30),
-    height: RF(30),
+    width: RF(40),
+    height: RF(40),
     resizeMode: 'contain',
     borderRadius: RF(100),
   },

@@ -2,16 +2,14 @@ import {COLORS} from '@theme/colors';
 import {RF, WP} from '@theme/responsive';
 import React, {useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
-import {Image} from 'react-native-elements';
-import {
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-} from 'react-native-gesture-handler';
+import {Image} from 'react-native';
+import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 interface Props {
   images: any;
   onPress: any;
+  isShare: boolean;
 }
-const CustomImageSlider = ({images, onPress}: Partial<Props>) => {
+const CustomImageSlider = ({images, onPress, isShare}: Partial<Props>) => {
   const [active, setActive] = useState(0);
 
   const change = (nativeEvent: any) => {
@@ -26,7 +24,7 @@ const CustomImageSlider = ({images, onPress}: Partial<Props>) => {
   };
 
   return (
-    <View style={styles.wrapScroll}>
+    <View style={[styles.wrapScroll, {width: isShare ? WP(80) : WP(100)}]}>
       <ScrollView
         onScroll={({nativeEvent}) => change(nativeEvent)}
         showsHorizontalScrollIndicator={false}
@@ -35,11 +33,9 @@ const CustomImageSlider = ({images, onPress}: Partial<Props>) => {
         {images.map((e: any, index: number) => (
           <TouchableWithoutFeedback key={index} onPress={onPress}>
             <Image
-              style={styles.wrapImage}
+              style={[styles.wrapImage, {width: isShare ? WP(80) : WP(100)}]}
               source={{uri: e}}
               key={index}
-              height={undefined}
-              width={undefined}
             />
           </TouchableWithoutFeedback>
         ))}
@@ -58,17 +54,15 @@ const CustomImageSlider = ({images, onPress}: Partial<Props>) => {
 
 const styles = StyleSheet.create({
   wrapScroll: {
-    width: WP(80),
     height: RF(200),
     backgroundColor: COLORS.WHITE,
   },
   wrapImage: {
-    width: WP(80),
     height: RF(200),
-    resizeMode: 'contain',
+    resizeMode: 'cover',
   },
   wrapDot: {
-    position: 'absolute',
+    position: 'relative',
     bottom: 0,
     flexDirection: 'row',
     alignSelf: 'center',
@@ -77,8 +71,8 @@ const styles = StyleSheet.create({
     margin: 3,
     color: 'transparent',
     borderRadius: 100,
-    borderColor: COLORS.PLACEHOLDER,
-    backgroundColor: COLORS.PLACEHOLDER,
+    borderColor: COLORS.LIGHT_GRAY,
+    backgroundColor: COLORS.LIGHT_GRAY,
     borderWidth: 1,
     width: RF(8),
     height: RF(8),

@@ -24,6 +24,8 @@ import {
 } from 'react-native-gesture-handler';
 import {navigate} from '@services/navService';
 import {ROUTES} from '@utils/routes';
+import {Briefcase} from 'react-native-feather';
+import JobsStack from '../mainStack/job';
 
 const {WHITE, LIGHT_GRAY, PRIMARY, BLACK} = COLORS;
 
@@ -95,18 +97,13 @@ const MyTabs = ({navigation}: any) => {
         }}
       />
       <Tab.Screen
-        name="ProfileStack"
-        component={ProfileStack}
+        name="JobsStack"
+        component={JobsStack}
         options={{
           tabBarIcon: ({color, focused}) => (
-            <TabBarIcon
-              source={userIcon}
-              color={color}
-              onPress={() => navigate(ROUTES.PROFILE, {id: user?.user?.id})}
-            />
+            <Briefcase color={color} width={RF(22)} height={RF(22)} />
           ),
         }}
-        initialParams={{id: user?.user?.id}}
       />
     </Tab.Navigator>
   );

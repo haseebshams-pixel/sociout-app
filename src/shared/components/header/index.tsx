@@ -6,6 +6,8 @@ import React from 'react';
 import {Pressable, StyleSheet, View, ViewProps, ViewStyle} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import CustomText from '../customText';
+import {useSelector} from 'react-redux';
+import {profilePlaceholder} from '@assets/images';
 
 const {BLACK, PRIMARY} = COLORS;
 
@@ -24,6 +26,7 @@ interface viewProp extends ViewProps {
   rightAction: any;
   leftText: string;
   rightText: string;
+  userIcon: any;
 }
 
 const Header = (props: Partial<viewProp>) => {
@@ -42,8 +45,9 @@ const Header = (props: Partial<viewProp>) => {
     rightAction,
     leftText,
     rightText,
+    userIcon,
   } = props;
-
+  const {user} = useSelector((state: any) => state?.root?.user);
   return (
     <View
       style={[
@@ -64,6 +68,14 @@ const Header = (props: Partial<viewProp>) => {
           {leftIcon ? (
             <BackButton color={color} backAction={backAction} />
           ) : null}
+          {userIcon && (
+            <Pressable onPress={() => backAction()}>
+              <FastImage
+                source={user?.avatar ? {uri: user?.avatar} : profilePlaceholder}
+                style={[{width: RF(30), height: RF(30), borderRadius: RF(100)}]}
+              />
+            </Pressable>
+          )}
         </View>
       </View>
       <View style={styles.middleContainer}>

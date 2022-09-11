@@ -7,7 +7,6 @@ import {View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {styles} from './styles';
 import {profilePlaceholder} from '@assets/images';
-import {useSelector} from 'react-redux';
 import CustomImageSlider from '@components/customImageSlider';
 import {getUser} from '@services/userService';
 import PostUserLoader from '@loaders/postUserLoader';
@@ -74,10 +73,7 @@ interface PostUserInterface {
 }
 
 const ShareCard = ({item}: Props) => {
-  const {user} = useSelector((state: any) => state.root.user);
   const [postUser, setPostUser] = useState<Partial<PostUserInterface>>();
-  const [commentCount, setCommentCount] = useState(0);
-  const [likeCount, setLikeCount] = useState(0);
   const [userLoader, setUserLoader] = useState(false);
   const [visible, setVisible] = useState(false);
 
@@ -97,13 +93,8 @@ const ShareCard = ({item}: Props) => {
         setUserLoader(false);
       });
   };
-  const postActionsCount = async () => {
-    setLikeCount(item?.PostObject[0]?.shareLikedBy[0]?.likedBy.length);
-    setCommentCount(item?.PostObject[0]?.shareComments?.length);
-  };
   useEffect(() => {
     fetchUser();
-    postActionsCount();
   }, []);
 
   return (
@@ -134,30 +125,23 @@ const ShareCard = ({item}: Props) => {
         <PostContentLoader />
       ) : (
         <>
-          <CustomText size={15} style={[GST.mb4]}>
-            {item?.PostObject[0]?.text}
-          </CustomText>
+          {item?.PostObject[0]?.text && (
+            <CustomText size={15} style={[GST.mt4]}>
+              {item?.PostObject[0]?.text}
+            </CustomText>
+          )}
+
           {item?.PostObject[0]?.images.length > 0 && (
-            <View style={[GST.CENTER_ALIGN, GST.mb4, {width: WP(80)}]}>
+            <View style={[GST.CENTER_ALIGN, GST.mt4, {width: WP(80)}]}>
               <CustomImageSlider
                 images={item?.PostObject[0]?.images}
                 onPress={toggleOverlay}
+                isShare
               />
             </View>
           )}
         </>
       )}
-      <View style={[styles.seperator, GST.mb2]} />
-      <View style={[GST.FLEX_ROW_SPACE]}>
-        <CustomText size={15}>
-          {likeCount} Like{likeCount > 1 || likeCount == 0 ? 's' : ''}
-        </CustomText>
-        <CustomText size={15}>
-          {' '}
-          {commentCount} Comment
-          {commentCount > 1 || commentCount == 0 ? 's' : ''}
-        </CustomText>
-      </View>
       {visible && (
         <CustomOverlayImageSlider
           images={item?.PostObject[0]?.images}

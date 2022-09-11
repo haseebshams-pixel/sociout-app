@@ -3,7 +3,8 @@ import {COLORS} from '@theme/colors';
 import {GST} from '@theme/globalStyles';
 import {RF} from '@theme/responsive';
 import React from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Share2} from 'react-native-feather';
 import {Modalize} from 'react-native-modalize';
 
@@ -20,12 +21,11 @@ interface Props {
 
 const ShareModalize = ({
   modalizeRef,
-  onClose,
   handleShare,
   sharePostData,
 }: Partial<Props>) => {
   return (
-    <Modalize ref={modalizeRef} modalHeight={RF(170)} onClose={onClose}>
+    <Modalize ref={modalizeRef} modalHeight={RF(170)} withReactModal>
       <View style={[styles.modalizeContainer]}>
         <TouchableOpacity style={[GST.FLEX_ROW]} onPressIn={handleShare}>
           <Share2 color={COLORS.GRAY} />

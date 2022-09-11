@@ -4,7 +4,7 @@ import PrimaryBtn from '@components/primaryBtn';
 import Wrapper from '@components/wrapper';
 import {COLORS} from '@theme/colors';
 import {GST} from '@theme/globalStyles';
-import { HP, RF } from '@theme/responsive';
+import {HP, RF} from '@theme/responsive';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import Header from '@components/header';
@@ -41,7 +41,7 @@ const SuccessComp = ({
       noPaddingTop={noPaddingTop}>
       {header && <Header leftIcon />}
       <View style={styles.bodyContainer}>
-        <View style={{height:HP(9)}} />
+        <View style={{height: HP(9)}} />
         <CustomImage
           path={image}
           size={180}
@@ -68,13 +68,13 @@ const SuccessComp = ({
           </CustomText>
         </View>
       </View>
-      <View style={{top:RF(25)}}>
-      <PrimaryBtn
-        sticky
-        title={btnTitle}
-        onPress={onBtnPress}
-        customStyle={GST.mx4}
-      />
+      <View style={{top: RF(25)}}>
+        <PrimaryBtn
+          sticky
+          title={btnTitle}
+          onPress={onBtnPress}
+          customStyle={GST.mx4}
+        />
       </View>
     </Wrapper>
   );
