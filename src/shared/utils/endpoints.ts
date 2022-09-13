@@ -17,6 +17,7 @@ const ENDPOINTS = {
   REJECTREQUEST: 'friends/reject/',
   USERSOCIALNETWORK: 'friends/user/socialCircle/',
   GETFRIENDSHIPSTATUS: 'friends/check/',
+  GETJOBS: 'jobs/search',
 };
 
 export {BASE_URL, ENDPOINTS};

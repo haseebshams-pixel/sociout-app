@@ -1,11 +1,10 @@
 //import liraries
 import CustomText from '@components/customText';
 import Header from '@components/header';
-import {HeaderComponent} from '@components/searchHeader';
 import Wrapper from '@components/wrapper';
 import {COLORS} from '@theme/colors';
 import {GST} from '@theme/globalStyles';
-import {HP, RF, WP} from '@theme/responsive';
+import {RF, WP} from '@theme/responsive';
 import React, {useState} from 'react';
 import {StatusBar, View} from 'react-native';
 import {Avatar} from 'react-native-elements';

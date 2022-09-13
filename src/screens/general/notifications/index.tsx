@@ -1,16 +1,10 @@
 //import liraries
-import CustomText from '@components/customText';
 import Header from '@components/header';
-import {HeaderComponent} from '@components/searchHeader';
 import Wrapper from '@components/wrapper';
 import {COLORS} from '@theme/colors';
-import {GST} from '@theme/globalStyles';
-import {HP, RF, WP} from '@theme/responsive';
-import React, {useEffect, useState} from 'react';
-import {Button, StatusBar, Text, View} from 'react-native';
-import {Avatar} from 'react-native-elements';
+import React, {useState} from 'react';
+import {StatusBar} from 'react-native';
 import {useSelector} from 'react-redux';
-import {styles} from './styles';
 const {DARK_GRAY} = COLORS;
 
 // create a component
@@ -20,7 +14,6 @@ const Notifications = ({route}: any) => {
 
   return (
     <Wrapper>
-      <StatusBar translucent barStyle={'dark-content'} />
       <Header title={'Notifications'} />
     </Wrapper>
   );
