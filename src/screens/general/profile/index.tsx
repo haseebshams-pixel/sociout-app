@@ -427,8 +427,10 @@ const Profile = ({route, navigation}: any) => {
               }
             }}
             onMomentumScrollBegin={() => {
-              setBottomLoader(true);
-              setEndReached(true);
+              if (!bottomLoader) {
+                setBottomLoader(true);
+                setEndReached(true);
+              }
             }}
             refreshing={refresh}
             onRefresh={() => {

@@ -18,10 +18,10 @@ import {
 } from '@services/userService';
 import {COLORS} from '@theme/colors';
 import {GST} from '@theme/globalStyles';
-import {HP, RF, WP} from '@theme/responsive';
+import {WP} from '@theme/responsive';
 import {ROUTES} from '@utils/routes';
 import React, {useEffect, useState} from 'react';
-import {StatusBar, TouchableOpacity, View, FlatList} from 'react-native';
+import {FlatList, StatusBar, TouchableOpacity, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {useDispatch, useSelector} from 'react-redux';
 

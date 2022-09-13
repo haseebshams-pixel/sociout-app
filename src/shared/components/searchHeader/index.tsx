@@ -29,6 +29,7 @@ const HeaderComponent = ({searchHandler, title}: any) => {
           placeholder={title ? title : 'Search'}
           onChangeText={e => dataHandler(e)}
           placeholderTextColor={LIGHT_GRAY}
+          selectionColor={WHITE}
         />
         {value?.length > 0 && (
           <Icon

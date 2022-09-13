@@ -40,7 +40,7 @@ const CustomOverlayImageSlider = ({
   return (
     <View style={[GST.FLEX, styles.container]}>
       <Modal
-        animationType="fade"
+        animationType="slide"
         transparent={true}
         visible={visible}
         onRequestClose={toggleOverlay}>

@@ -15,6 +15,7 @@ const changePasswordIcon = require('./changePassword.png');
 const termsIcon = require('./terms.png');
 const aboutIcon = require('./about.png');
 const deleteIcon = require('./trash.png');
+const moreIcon = require('./more.png');
 export {
   splashlogo,
   back,
@@ -33,4 +34,5 @@ export {
   termsIcon,
   aboutIcon,
   deleteIcon,
+  moreIcon,
 };

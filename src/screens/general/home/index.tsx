@@ -9,12 +9,11 @@ import {navigate} from '@services/navService';
 import {getAllPosts} from '@services/postService';
 import {COLORS} from '@theme/colors';
 import {GST} from '@theme/globalStyles';
-import {HP, RF, WP} from '@theme/responsive';
+import {RF} from '@theme/responsive';
 import {ROUTES} from '@utils/routes';
 import React, {useEffect, useState} from 'react';
 import {FlatList} from 'react-native';
 import {SkypeIndicator} from 'react-native-indicators';
-import {useDispatch} from 'react-redux';
 import {styles} from './styles';
 
 // create a component
@@ -22,11 +21,12 @@ const Home = () => {
   const [skip, setSkip] = useState(0);
   const [loader, setLaoder] = useState(false);
   const [bottomLoader, setBottomLoader] = useState(false);
+  const [alreadyLoading, setAlreadyLoading] = useState(false);
   const [endReached, setEndReached] = useState(false);
   const [posts, setPosts] = useState([]);
-  const dispatch = useDispatch();
   const [refresh, setRefresh] = useState(false);
   const getPosts = (k: number) => {
+    setAlreadyLoading(true);
     getAllPosts(k)
       .then(({data}: any) => {
         setPosts(p => {
@@ -40,6 +40,7 @@ const Home = () => {
         setLaoder(false);
         setBottomLoader(false);
         setRefresh(false);
+        setAlreadyLoading(false);
       });
   };
   useEffect(() => {
@@ -76,16 +77,20 @@ const Home = () => {
         data={posts}
         style={[styles.container]}
         onEndReached={() => {
-          if (endReached && !refresh && bottomLoader) {
-            let k = skip + 3;
-            setSkip(k);
-            getPosts(k);
-            setEndReached(false);
+          if (!alreadyLoading) {
+            if (endReached && !refresh && bottomLoader) {
+              let k = skip + 5;
+              setSkip(k);
+              getPosts(k);
+              setEndReached(false);
+            }
           }
         }}
         onMomentumScrollBegin={() => {
-          setBottomLoader(true);
-          setEndReached(true);
+          if (posts?.length != 0) {
+            setBottomLoader(true);
+            setEndReached(true);
+          }
         }}
         onEndReachedThreshold={0}
         ListFooterComponent={FooterComponent}

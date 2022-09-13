@@ -1,27 +1,115 @@
 //import liraries
-import CustomText from '@components/customText';
 import Header from '@components/header';
+import JobCard from '@components/jobCard';
 import {HeaderComponent} from '@components/searchHeader';
+import {styles} from './styles';
 import Wrapper from '@components/wrapper';
 import {COLORS} from '@theme/colors';
-import {GST} from '@theme/globalStyles';
-import {HP, RF, WP} from '@theme/responsive';
+import {HP, RF} from '@theme/responsive';
 import React, {useEffect, useState} from 'react';
-import {Button, StatusBar, Text, View} from 'react-native';
-import {Avatar} from 'react-native-elements';
+import {FlatList, View} from 'react-native';
 import {useSelector} from 'react-redux';
-import {styles} from './styles';
-const {DARK_GRAY} = COLORS;
+import {getAllJobs} from '@services/jobsService';
+import {SkypeIndicator} from 'react-native-indicators';
+import {GST} from '@theme/globalStyles';
+import CustomText from '@components/customText';
+import CustomLoading from '@components/customLoading';
 
 // create a component
 const Jobs = ({route}: any) => {
   const {user} = useSelector((state: any) => state.root.user);
-  const [value, setvalue] = useState<any>('');
+  const [skip, setSkip] = useState(0);
+  const [search, setSearch] = useState<any>('');
+  const [loader, setLoader] = useState(false);
+  const [bottomLoader, setBottomLoader] = useState(false);
+  const [alreadyLoading, setAlreadyLoading] = useState(false);
+  const [endReached, setEndReached] = useState(false);
+  const [jobs, setJobs] = useState([]);
+  const [refresh, setRefresh] = useState(false);
+
+  const getJobs = (k: number) => {
+    setAlreadyLoading(true);
+    getAllJobs(k, search)
+      .then(({data}: any) => {
+        setJobs(p => {
+          return p.concat(data);
+        });
+      })
+      .catch(err => {
+        console.log('Error', err);
+      })
+      .finally(() => {
+        setLoader(false);
+        setBottomLoader(false);
+        setRefresh(false);
+        setAlreadyLoading(false);
+      });
+  };
+
+  const FooterComponent = () => {
+    if (bottomLoader && !refresh) {
+      return (
+        <SkypeIndicator
+          size={RF(20)}
+          color={COLORS.BLACK}
+          style={[GST.mt3, GST.mb3]}
+        />
+      );
+    } else {
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    setLoader(true);
+    getJobs(skip);
+  }, []);
 
   return (
-    <Wrapper>
-      <StatusBar translucent barStyle={'dark-content'} />
+    <Wrapper noPaddingBottom>
       <Header title={'Jobs'} />
+      <HeaderComponent searchHandler={setSearch} />
+
+      <FlatList
+        renderItem={({item}: any) => <JobCard item={item} />}
+        data={jobs}
+        style={[styles.container]}
+        onEndReached={() => {
+          if (!alreadyLoading) {
+            if (endReached && !refresh && bottomLoader) {
+              let k = skip + 3;
+              setSkip(k);
+              getJobs(k);
+              setEndReached(false);
+            }
+          }
+        }}
+        onMomentumScrollBegin={() => {
+          if (jobs?.length != 0) {
+            setBottomLoader(true);
+            setEndReached(true);
+          }
+        }}
+        onEndReachedThreshold={0}
+        ListFooterComponent={FooterComponent}
+        refreshing={refresh}
+        onRefresh={() => {
+          setBottomLoader(false);
+          setEndReached(false);
+          setRefresh(true);
+          setJobs([]);
+          setSkip(0);
+          setSearch('');
+          getJobs(0);
+        }}
+        ListHeaderComponent={() =>
+          jobs?.length == 0 && !loader && !refresh ? (
+            <CustomText>No Jobs found!</CustomText>
+          ) : null
+        }
+        ListHeaderComponentStyle={[styles.listHeader]}
+      />
+      {!bottomLoader && !refresh && <CustomLoading visible={loader} />}
     </Wrapper>
   );
 };
