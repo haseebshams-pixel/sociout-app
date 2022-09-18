@@ -50,9 +50,9 @@ export const ChangePasswordVS = yup.object().shape({
 });
 
 export const EditProfileVS = yup.object().shape({
-  firstname: yup.string().required('Firstname is Required').label('firstname'),
-  lastname: yup.string().required('Lastname is Required').label('lastname'),
-  phonenumber: yup
+  firstName: yup.string().required('Firstname is Required').label('firstname'),
+  lastName: yup.string().required('Lastname is Required').label('lastname'),
+  phoneNumber: yup
     .string()
     .required('Phone Number is Required')
     .label('phonenumber'),

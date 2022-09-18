@@ -8,6 +8,7 @@ import FastImage from 'react-native-fast-image';
 import CustomText from '../customText';
 import {useSelector} from 'react-redux';
 import {profilePlaceholder} from '@assets/images';
+import {PHOTO_URL} from '@utils/endpoints';
 
 const {BLACK, PRIMARY} = COLORS;
 
@@ -71,7 +72,11 @@ const Header = (props: Partial<viewProp>) => {
           {userIcon && (
             <Pressable onPress={() => backAction()}>
               <FastImage
-                source={user?.avatar ? {uri: user?.avatar} : profilePlaceholder}
+                source={
+                  user?.avatar
+                    ? {uri: PHOTO_URL + user?.avatar}
+                    : profilePlaceholder
+                }
                 style={[{width: RF(30), height: RF(30), borderRadius: RF(100)}]}
               />
             </Pressable>

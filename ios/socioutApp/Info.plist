@@ -39,6 +39,10 @@
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
+	<key>NSCameraUsageDescription</key>
+	<string>Sociout wants to use your camera</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>using library for photo upload</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>

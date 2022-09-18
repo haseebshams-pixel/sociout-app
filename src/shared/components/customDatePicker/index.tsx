@@ -31,6 +31,8 @@ interface DatePickerProp extends TextInputProps {
   tintColor: any;
   value: any;
   onChange: any;
+  inputStyle: any;
+  titleSize: number;
 }
 
 const CustomDatePicker = forwardRef(
@@ -45,8 +47,10 @@ const CustomDatePicker = forwardRef(
       required,
       onChange,
       mainContainerStyle,
+      inputStyle,
+      titleSize,
     } = props;
-    const labelSize = ANDROID ? 15 : 14;
+    const labelSize = titleSize ? titleSize : ANDROID ? 15 : 14;
     const [modalVisible, setModalVisible] = useState(false);
     return (
       <>
@@ -69,11 +73,17 @@ const CustomDatePicker = forwardRef(
             ]}
             onPress={() => setModalVisible(true)}>
             {value != '' ? (
-              <CustomText size={15} color={COLORS.BLACK} style={[styles.input]}>
+              <CustomText
+                size={15}
+                color={COLORS.BLACK}
+                style={[styles.input, inputStyle]}>
                 {value}
               </CustomText>
             ) : (
-              <CustomText size={15} color={COLORS.GRAY} style={[styles.input]}>
+              <CustomText
+                size={15}
+                color={COLORS.GRAY}
+                style={[styles.input, inputStyle]}>
                 Date of Birth
               </CustomText>
             )}

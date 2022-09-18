@@ -8,6 +8,7 @@ import {GST} from '@theme/globalStyles';
 import Wrapper from '@components/wrapper';
 import Header from '@components/header';
 import {COLORS} from '@theme/colors';
+import {PHOTO_URL} from '@utils/endpoints';
 //
 interface Props {
   images: [] | any;
@@ -21,7 +22,9 @@ const CustomOverlayImageSlider = ({
   toggleOverlay,
 }: Partial<Props>) => {
   const listItem = (item: any) => {
-    return <Image source={{uri: item?.item}} style={[styles.image]} />;
+    return (
+      <Image source={{uri: PHOTO_URL + item?.item}} style={[styles.image]} />
+    );
   };
   const [active, setActive] = useState(0);
   const [total, setTotal] = useState(images?.length);

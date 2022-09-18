@@ -39,6 +39,11 @@ const signUpDisableHandler = (value: any) => {
     ? true
     : false;
 };
+const editProfileDisableHandler = (value: any) => {
+  return value.firstName && value.lastName && value.phoneNumber && value.DOB
+    ? true
+    : false;
+};
 const showToast = (text1: string, text2: string, type: boolean) => {
   Toast.show({text1, text2, type: type ? 'success' : 'error'});
 };
@@ -49,4 +54,5 @@ export {
   showToast,
   displayAlert,
   signUpDisableHandler,
+  editProfileDisableHandler,
 };

@@ -37,6 +37,7 @@ import UserInfoLoader from '@loaders/userInfoLoader';
 import CustomAlert from '@components/customAlert';
 import EditProfile from './editProfileModal';
 import CustomLoading from '@components/customLoading';
+import {PHOTO_URL} from '@utils/endpoints';
 // create a component
 const Profile = ({route, navigation}: any) => {
   //states
@@ -220,7 +221,7 @@ const Profile = ({route, navigation}: any) => {
               <FastImage
                 source={
                   currentUser?.avatar
-                    ? {uri: currentUser?.avatar}
+                    ? {uri: PHOTO_URL + currentUser?.avatar}
                     : profilePlaceholder
                 }
                 style={[styles.profilePhoto]}
@@ -282,10 +283,17 @@ const Profile = ({route, navigation}: any) => {
           ) : (
             <>
               <CustomText size={14} style={[GST.mb1]} bold>
-                {currentUser?.firstname} {currentUser?.lastname}
+                {route?.params?.id == user?.user?.id
+                  ? user?.user?.firstname + ' ' + user?.user?.lastname
+                  : currentUser?.firstname + ' ' + currentUser?.lastname}
               </CustomText>
+
               {currentUser?.bio && (
-                <CustomText size={13}>{currentUser?.bio}</CustomText>
+                <CustomText size={13}>
+                  {route?.params?.id == user?.user?.id
+                    ? user?.user?.bio
+                    : currentUser?.bio}
+                </CustomText>
               )}
             </>
           )}
