@@ -1,12 +1,13 @@
 import AuthHeader from '@components/authHeader';
+import CustomDatePicker from '@components/customDatePicker';
 import CustomLoading from '@components/customLoading';
-import CustomText from '@components/customText';
 import Header from '@components/header';
 import Input from '@components/input';
 import PrimaryBtn from '@components/primaryBtn';
 import Wrapper from '@components/wrapper';
 import {setUser} from '@redux/reducers/userSlice';
-import {signUpDisableHandler, showToast} from '@services/helperService';
+import {registerUser} from '@services/authService';
+import {showToast, signUpDisableHandler} from '@services/helperService';
 import {COLORS} from '@theme/colors';
 import {GST} from '@theme/globalStyles';
 import {RF} from '@theme/responsive';
@@ -17,8 +18,6 @@ import {View} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import {useDispatch} from 'react-redux';
 import styles from './styles';
-import CustomDatePicker from '@components/customDatePicker';
-import {registerUser} from '@services/authService';
 
 const SIZE = 5;
 const {SECONDARY_GRAY} = COLORS;

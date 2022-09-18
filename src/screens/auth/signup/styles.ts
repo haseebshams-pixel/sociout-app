@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     // padding: RF(20),
-    paddingHorizontal: RF(20),
+    paddingHorizontal: RF(15),
   },
   header: {
     alignItems: 'center',

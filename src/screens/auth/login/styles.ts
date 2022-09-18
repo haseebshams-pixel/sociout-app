@@ -5,7 +5,7 @@ import {StyleSheet} from 'react-native';
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-   padding:RF(20)
+    padding: RF(15),
   },
   header: {
     alignItems: 'center',
@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
   },
   primaryText: {
     textDecorationLine: 'none',
-    fontSize:RF(16)
+    fontSize: RF(16),
   },
   contentContainer: {
     flexGrow: 1,

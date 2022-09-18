@@ -25,7 +25,7 @@ interface InputProp extends TextInputProps {
   titleColor: string;
   containerStyle: ViewStyle;
   HeadingTitle: string;
-  titleSize: string;
+  titleSize: number;
   leftIcon?: any;
   rightIcon?: any;
   inputProps: TextInputProps;
@@ -71,8 +71,9 @@ const Input = forwardRef((props: Partial<InputProp>, ref: any) => {
     inputStyle,
     tintColor,
     charLimit,
+    titleSize,
   } = props;
-  const labelSize = ANDROID ? 15 : 14;
+  const labelSize = titleSize ? titleSize : ANDROID ? 15 : 14;
 
   return (
     <View style={[styles.mainContainer, mainContainerStyle]}>

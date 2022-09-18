@@ -14,6 +14,7 @@ import {
 import {COLORS} from '@theme/colors';
 import {GST} from '@theme/globalStyles';
 import {WP} from '@theme/responsive';
+import {PHOTO_URL} from '@utils/endpoints';
 import {ROUTES} from '@utils/routes';
 import React, {useState} from 'react';
 import {FlatList, StatusBar, TouchableOpacity, View} from 'react-native';
@@ -68,10 +69,12 @@ const Item = ({item, navigation}: any) => {
           })
         }>
         <FastImage
-          source={item?.avatar ? {uri: item?.avatar} : profilePlaceholder}
+          source={
+            item?.avatar ? {uri: PHOTO_URL + item?.avatar} : profilePlaceholder
+          }
           style={[styles.profilePic]}
         />
-        <View style={[GST.ml3, {width: WP(40)}]}>
+        <View style={[GST.ml3, {width: WP(35)}]}>
           <CustomText size={14} bold numberOfLines={1}>
             {item?.firstname} {item?.lastname}
           </CustomText>

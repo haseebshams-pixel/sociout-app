@@ -22,6 +22,7 @@ import {showToast} from '@services/helperService';
 import {Modalize} from 'react-native-modalize';
 import ShareModalize from '@components/shareModalize';
 import CustomLoading from '@components/customLoading';
+import {PHOTO_URL} from '@utils/endpoints';
 
 //
 interface Props {
@@ -201,7 +202,9 @@ const PostCard = ({item}: Props) => {
           <>
             <FastImage
               source={
-                postUser?.avatar ? {uri: postUser?.avatar} : profilePlaceholder
+                postUser?.avatar
+                  ? {uri: PHOTO_URL + postUser?.avatar}
+                  : profilePlaceholder
               }
               style={[styles.userPhoto]}
             />
@@ -252,11 +255,15 @@ const PostCard = ({item}: Props) => {
                 height={RF(20)}
               />
             )}
-            <CustomText size={13}>{likeCount}</CustomText>
+            <CustomText style={[GST.ml1]} size={13}>
+              {likeCount}
+            </CustomText>
           </TouchableWithoutFeedback>
           <View style={[GST.FLEX_ROW, GST.ml2]}>
             <MessageSquare color={COLORS.BLACK} height={RF(20)} />
-            <CustomText size={13}>{commentCount}</CustomText>
+            <CustomText style={[GST.ml1]} size={13}>
+              {commentCount}
+            </CustomText>
           </View>
         </View>
         {!item?.PostObject[0]?.isShared && (

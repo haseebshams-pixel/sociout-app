@@ -1,5 +1,6 @@
 import {COLORS} from '@theme/colors';
 import {RF, WP} from '@theme/responsive';
+import {PHOTO_URL} from '@utils/endpoints';
 import React, {useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {Image} from 'react-native';
@@ -34,7 +35,7 @@ const CustomImageSlider = ({images, onPress, isShare}: Partial<Props>) => {
           <TouchableWithoutFeedback key={index} onPress={onPress}>
             <Image
               style={[styles.wrapImage, {width: isShare ? WP(80) : WP(100)}]}
-              source={{uri: e}}
+              source={{uri: PHOTO_URL + e}}
               key={index}
             />
           </TouchableWithoutFeedback>

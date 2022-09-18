@@ -31,6 +31,9 @@ const rejectRequest = (id: string) => {
 const getFriendShipStatus = (id: string) => {
   return HTTP_CLIENT.get(ENDPOINTS.GETFRIENDSHIPSTATUS + id);
 };
+const editUserProfile = (params: any) => {
+  return HTTP_CLIENT.put(ENDPOINTS.EDITUSERPROFILE, params);
+};
 export {
   getUser,
   getUserPost,
@@ -42,4 +45,5 @@ export {
   rejectRequest,
   getUserSocialNetwork,
   getFriendShipStatus,
+  editUserProfile,
 };
