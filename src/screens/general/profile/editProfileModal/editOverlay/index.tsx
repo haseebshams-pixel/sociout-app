@@ -27,32 +27,46 @@ const EditOverlay = ({
         onBackdropPress={toggleOverlay}
         overlayStyle={[styles.container]}>
         <View style={[styles.modalizeContainer]}>
-          <PrimaryBtn
-            onPress={openCamera}
-            titleSize={14}
-            title="Take Photo"
-            customStyle={[styles.customBtn]}
-            customContainerStyle={[styles.btnContainer]}
-          />
-          <PrimaryBtn
-            onPress={openGallery}
-            titleSize={14}
-            title="Choose from Gallery"
-            customStyle={[styles.customBtn]}
-            customContainerStyle={[styles.btnContainer]}
-          />
-          <PrimaryBtn
-            titleSize={14}
-            title="Remove Photo"
-            customStyle={[styles.customBtn]}
-            customContainerStyle={[styles.btnContainer]}
-          />
+          <View
+            style={[
+              {
+                backgroundColor: COLORS.LIGHT_GRAY,
+                width: WP(90),
+                borderTopLeftRadius: RF(5),
+                borderTopRightRadius: RF(5),
+              },
+            ]}>
+            <PrimaryBtn
+              onPress={openCamera}
+              titleSize={14}
+              title="Take Photo"
+              customStyle={[styles.customBtn]}
+              titleColor={COLORS.BLACK}
+              customContainerStyle={[styles.btnContainer]}
+            />
+            <PrimaryBtn
+              onPress={openGallery}
+              titleSize={14}
+              titleColor={COLORS.BLACK}
+              title="Choose from Gallery"
+              customStyle={[styles.customBtn]}
+              customContainerStyle={[styles.btnContainer]}
+            />
+            <PrimaryBtn
+              titleSize={14}
+              titleColor={COLORS.BLACK}
+              title="Remove Photo"
+              customStyle={[styles.customBtn]}
+              customContainerStyle={[styles.btnContainer]}
+            />
+          </View>
+
           <PrimaryBtn
             titleSize={14}
             titleColor={COLORS.BLACK}
             title="Cancel"
             customStyle={[styles.customBtn2]}
-            customContainerStyle={[styles.btnContainer, GST.mt4]}
+            customContainerStyle={[styles.btnContainer]}
             onPress={toggleOverlay}
           />
         </View>
@@ -71,15 +85,21 @@ export const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     ...GST.mb4,
+    alignItems: 'center',
   },
   customBtn: {
     height: RF(40),
     width: WP(90),
-    borderRadius: RF(5),
+    borderRadius: RF(0),
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
-    borderWidth: 1,
+    borderBottomWidth: 1,
+    marginTop: RF(0),
+    marginBottom: RF(0),
+    backgroundColor: 'transparent',
+    borderColor: 'transparent',
+    borderBottomColor: 'grey',
   },
   customBtn2: {
     height: RF(40),

@@ -17,7 +17,6 @@ export const styles = StyleSheet.create({
     padding: RF(15),
   },
   mainContainer: {
-    flex: 1,
     paddingLeft: RF(15),
     paddingRight: RF(15),
   },
