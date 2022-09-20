@@ -118,14 +118,7 @@ const EditProfile = ({modalVisible, setModalVisible}: any) => {
         }}>
         <View style={[styles.modalView]}>
           <Wrapper noPaddingBottom>
-            <Header
-              title={'Edit Profile'}
-              leftText={'Cancel'}
-              rightText={'Done'}
-              rightAction={() => setModalVisible(false)}
-              backAction={() => setModalVisible(false)}
-            />
-            <View style={styles.mainContainer}>
+            <View>
               <Formik
                 initialValues={initialValues}
                 validationSchema={EditProfileVS}
@@ -142,116 +135,117 @@ const EditProfile = ({modalVisible, setModalVisible}: any) => {
                   <KeyboardAwareScrollView
                     showsVerticalScrollIndicator={false}
                     keyboardShouldPersistTaps={'never'}>
-                    <TouchableOpacity
-                      onPress={toggleOverlay}
-                      style={[
-                        {
-                          flex: 1,
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                        },
-                        GST.mb4,
-                      ]}>
-                      <FastImage
-                        source={
-                          values?.avatar
-                            ? {uri: PHOTO_URL + values?.avatar}
-                            : profilePlaceholder
-                        }
-                        style={[styles.profilePhoto]}
-                      />
-                      <CustomText size={12} color={COLORS.PRIMARY}>
-                        Change profile photo
-                      </CustomText>
-                    </TouchableOpacity>
+                    <Header
+                      title={'Edit Profile'}
+                      leftText={'Cancel'}
+                      rightText={'Done'}
+                      rightAction={handleSubmit}
+                      backAction={() => setModalVisible(false)}
+                    />
+                    <View style={styles.mainContainer}>
+                      <TouchableOpacity
+                        onPress={toggleOverlay}
+                        style={[
+                          {
+                            flex: 1,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          },
+                          GST.mb4,
+                        ]}>
+                        <FastImage
+                          source={
+                            values?.avatar
+                              ? {uri: PHOTO_URL + values?.avatar}
+                              : profilePlaceholder
+                          }
+                          style={[styles.profilePhoto]}
+                        />
+                        <CustomText size={12} color={COLORS.PRIMARY}>
+                          Change profile photo
+                        </CustomText>
+                      </TouchableOpacity>
 
-                    <View style={{flex: 1, flexDirection: 'row'}}>
+                      <View style={{flex: 1, flexDirection: 'row'}}>
+                        <Input
+                          mainContainerStyle={GST.w50}
+                          title={'First Name'}
+                          textContentType={'name'}
+                          value={values.firstName}
+                          autoCapitalize={'none'}
+                          placeholder={'First Name'}
+                          keyboardType="default"
+                          onChangeText={handleChange('firstName')}
+                          error={
+                            touched.firstName && errors.firstName
+                              ? errors.firstName
+                              : ''
+                          }
+                          inputStyle={[styles.inputStyle]}
+                          containerStyle={styles.inputContainer}
+                          titleSize={12}
+                        />
+                        <Input
+                          mainContainerStyle={[GST.w50, GST.pl1]}
+                          title={'Last Name'}
+                          textContentType={'name'}
+                          value={values.lastName}
+                          autoCapitalize={'none'}
+                          placeholder={'Last Name'}
+                          keyboardType="default"
+                          onChangeText={handleChange('lastName')}
+                          error={
+                            touched.lastName && errors.lastName
+                              ? errors.lastName
+                              : ''
+                          }
+                          inputStyle={[styles.inputStyle]}
+                          containerStyle={styles.inputContainer}
+                          titleSize={12}
+                        />
+                      </View>
+
                       <Input
-                        mainContainerStyle={GST.w50}
-                        title={'First Name'}
-                        textContentType={'name'}
-                        value={values.firstName}
+                        title={'Phone Number'}
+                        textContentType={'telephoneNumber'}
+                        value={values.phoneNumber}
                         autoCapitalize={'none'}
-                        placeholder={'First Name'}
-                        keyboardType="default"
-                        onChangeText={handleChange('firstName')}
+                        placeholder={'Phone Number'}
+                        keyboardType="phone-pad"
+                        onChangeText={handleChange('phoneNumber')}
                         error={
-                          touched.firstName && errors.firstName
-                            ? errors.firstName
+                          touched.phoneNumber && errors.phoneNumber
+                            ? errors.phoneNumber
                             : ''
                         }
                         inputStyle={[styles.inputStyle]}
                         containerStyle={styles.inputContainer}
                         titleSize={12}
                       />
+                      <CustomDatePicker
+                        title={'Date of Birth'}
+                        value={values.DOB}
+                        onChange={setFieldValue}
+                        error={touched.DOB && errors.DOB ? errors.DOB : ''}
+                        containerStyle={styles.inputContainer}
+                        inputStyle={[{fontSize: RF(13)}]}
+                        titleSize={12}
+                      />
                       <Input
-                        mainContainerStyle={[GST.w50, GST.pl1]}
-                        title={'Last Name'}
+                        title={'Bio'}
                         textContentType={'name'}
-                        value={values.lastName}
-                        autoCapitalize={'none'}
-                        placeholder={'Last Name'}
+                        value={values.bio}
+                        autoCapitalize={'sentences'}
+                        placeholder={'Bio'}
                         keyboardType="default"
-                        onChangeText={handleChange('lastName')}
-                        error={
-                          touched.lastName && errors.lastName
-                            ? errors.lastName
-                            : ''
-                        }
+                        onChangeText={handleChange('bio')}
+                        multiline
+                        error={touched.bio && errors.bio ? errors.bio : ''}
                         inputStyle={[styles.inputStyle]}
                         containerStyle={styles.inputContainer}
                         titleSize={12}
                       />
                     </View>
-
-                    <Input
-                      title={'Phone Number'}
-                      textContentType={'telephoneNumber'}
-                      value={values.phoneNumber}
-                      autoCapitalize={'none'}
-                      placeholder={'Phone Number'}
-                      keyboardType="phone-pad"
-                      onChangeText={handleChange('phoneNumber')}
-                      error={
-                        touched.phoneNumber && errors.phoneNumber
-                          ? errors.phoneNumber
-                          : ''
-                      }
-                      inputStyle={[styles.inputStyle]}
-                      containerStyle={styles.inputContainer}
-                      titleSize={12}
-                    />
-                    <CustomDatePicker
-                      title={'Date of Birth'}
-                      value={values.DOB}
-                      onChange={setFieldValue}
-                      error={touched.DOB && errors.DOB ? errors.DOB : ''}
-                      containerStyle={styles.inputContainer}
-                      inputStyle={[{fontSize: RF(13)}]}
-                      titleSize={12}
-                    />
-                    <Input
-                      title={'Bio'}
-                      textContentType={'name'}
-                      value={values.bio}
-                      autoCapitalize={'sentences'}
-                      placeholder={'Bio'}
-                      keyboardType="default"
-                      onChangeText={handleChange('bio')}
-                      multiline
-                      error={touched.bio && errors.bio ? errors.bio : ''}
-                      inputStyle={[styles.inputStyle]}
-                      containerStyle={styles.inputContainer}
-                      titleSize={12}
-                    />
-                    <PrimaryBtn
-                      disabled={!editProfileDisableHandler(values)}
-                      title={'Save'}
-                      onPress={handleSubmit}
-                      titleSize={13}
-                      customStyle={[styles.customBtn]}
-                      customContainerStyle={[styles.btnContainer]}
-                    />
                     <CustomLoading visible={isSubmitting} />
                   </KeyboardAwareScrollView>
                 )}
