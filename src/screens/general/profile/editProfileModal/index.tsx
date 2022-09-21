@@ -30,6 +30,8 @@ const EditProfile = ({modalVisible, setModalVisible}: any) => {
   const dispatch = useDispatch();
   const {user} = useSelector((state: any) => state.root);
   const [overlayVisible, setOverlayVisible] = useState(false);
+  const [newPhoto, setNewPhoto] = useState<any>(null);
+  const [userPhoto, setUserPhoto] = useState<any>(user?.user?.avatar);
   const toggleOverlay = () => {
     setOverlayVisible(!overlayVisible);
   };
@@ -50,7 +52,7 @@ const EditProfile = ({modalVisible, setModalVisible}: any) => {
       mediaType: 'photo',
     })
       .then(image => {
-        console.log(image);
+        setNewPhoto(image);
       })
       .catch(err => {
         console.log('Error', err);
@@ -68,7 +70,7 @@ const EditProfile = ({modalVisible, setModalVisible}: any) => {
       mediaType: 'photo',
     })
       .then(image => {
-        console.log(image);
+        setNewPhoto(image);
       })
       .catch(err => {
         console.log('Error', err);
@@ -77,17 +79,34 @@ const EditProfile = ({modalVisible, setModalVisible}: any) => {
         toggleOverlay();
       });
   };
+
+  const removePhoto = () => {
+    setNewPhoto(null);
+    setUserPhoto(null);
+    toggleOverlay();
+  };
+
   const submitHandler = (
     {DOB, firstName, lastName, phoneNumber, bio}: any,
     {setSubmitting}: any,
   ) => {
-    const params = {
-      firstname: firstName,
-      lastname: lastName,
-      phonenumber: phoneNumber,
-      DOB: DOB,
-      bio: bio,
-    };
+    const params = new FormData();
+
+    if (newPhoto) {
+      params.append('file', {
+        uri: newPhoto.sourceURL,
+        type: newPhoto.mime,
+        name: newPhoto.filename,
+      });
+    }
+    params.append('firstname', firstName);
+    params.append('lastname', lastName);
+    params.append('phonenumber', phoneNumber);
+    params.append('DOB', DOB);
+    params.append('bio', bio);
+    if (!newPhoto && !userPhoto) {
+      params.append('isDelete', true);
+    }
     editUserProfile(params)
       .then(({data}: any) => {
         let obj = {
@@ -102,6 +121,7 @@ const EditProfile = ({modalVisible, setModalVisible}: any) => {
         showToast('Request Failed', err?.response.data, false);
       })
       .finally(() => {
+        setNewPhoto(null);
         setSubmitting(false);
         setModalVisible(!modalVisible);
       });
@@ -140,7 +160,10 @@ const EditProfile = ({modalVisible, setModalVisible}: any) => {
                       leftText={'Cancel'}
                       rightText={'Done'}
                       rightAction={handleSubmit}
-                      backAction={() => setModalVisible(false)}
+                      backAction={() => {
+                        setModalVisible(false);
+                        setNewPhoto(null);
+                      }}
                     />
                     <View style={styles.mainContainer}>
                       <TouchableOpacity
@@ -155,8 +178,10 @@ const EditProfile = ({modalVisible, setModalVisible}: any) => {
                         ]}>
                         <FastImage
                           source={
-                            values?.avatar
-                              ? {uri: PHOTO_URL + values?.avatar}
+                            newPhoto
+                              ? {uri: newPhoto?.sourceURL}
+                              : userPhoto
+                              ? {uri: PHOTO_URL + userPhoto}
                               : profilePlaceholder
                           }
                           style={[styles.profilePhoto]}
@@ -255,6 +280,7 @@ const EditProfile = ({modalVisible, setModalVisible}: any) => {
                 toggleOverlay={toggleOverlay}
                 openGallery={openGallery}
                 openCamera={openCamera}
+                removePhoto={removePhoto}
               />
             </View>
           </Wrapper>

@@ -12,6 +12,7 @@ interface Props {
   toggleOverlay: any;
   openGallery: any;
   openCamera: any;
+  removePhoto: any;
 }
 
 const EditOverlay = ({
@@ -19,6 +20,7 @@ const EditOverlay = ({
   toggleOverlay,
   openGallery,
   openCamera,
+  removePhoto,
 }: Partial<Props>) => {
   return (
     <View>
@@ -58,6 +60,7 @@ const EditOverlay = ({
               title="Remove Photo"
               customStyle={[styles.customBtn]}
               customContainerStyle={[styles.btnContainer]}
+              onPress={removePhoto}
             />
           </View>
 
