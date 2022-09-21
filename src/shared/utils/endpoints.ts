@@ -1,5 +1,5 @@
-// const BASE_URL = 'https://sociout-dev.herokuapp.com/api/';
-const BASE_URL = 'http://localhost:8000/api/';
+const BASE_URL = 'https://sociout-dev.herokuapp.com/api/';
+// const BASE_URL = 'http://localhost:8000/api/';
 
 const PHOTO_URL = 'https://storage.googleapis.com/sociout-data/';
 
