@@ -145,6 +145,7 @@ const PostCard = ({item}: Props) => {
       id: item?.PostObject[0]?._id,
     };
     setLike(true);
+    let likes = likeCount + 1;
     setLikeCount(likeCount + 1);
     likePost(obj)
       .then((res: any) => {
@@ -156,12 +157,17 @@ const PostCard = ({item}: Props) => {
       .catch(err => {
         console.log('Error', err);
         setLike(false);
-        setLikeCount(likeCount - 1);
+        if (likes > 1) {
+          setLikeCount(likeCount - 1);
+        } else {
+          setLikeCount(0);
+        }
       })
       .finally(() => {});
   };
   const handleDisLike = async () => {
     setLike(false);
+    let likes = likeCount - 1;
     setLikeCount(likeCount - 1);
     dislikePost(item?.PostObject[0]?._id)
       .then((res: any) => {
@@ -173,7 +179,11 @@ const PostCard = ({item}: Props) => {
       .catch(err => {
         console.log('Error', err);
         setLike(true);
-        setLikeCount(likeCount + 1);
+        if (likes > 1) {
+          setLikeCount(likeCount + 1);
+        } else {
+          setLikeCount(0);
+        }
       })
       .finally(() => {});
   };

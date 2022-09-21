@@ -1,4 +1,4 @@
-import {HTTP_CLIENT} from '@utils/config';
+import {HTTP_CLIENT, HTTP_CLIENT2} from '@utils/config';
 import {ENDPOINTS} from '@utils/endpoints';
 
 const getUser = (id: string) => {
@@ -32,7 +32,7 @@ const getFriendShipStatus = (id: string) => {
   return HTTP_CLIENT.get(ENDPOINTS.GETFRIENDSHIPSTATUS + id);
 };
 const editUserProfile = (params: any) => {
-  return HTTP_CLIENT.put(ENDPOINTS.EDITUSERPROFILE, params);
+  return HTTP_CLIENT2.put(ENDPOINTS.EDITUSERPROFILE, params);
 };
 export {
   getUser,

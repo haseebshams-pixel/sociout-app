@@ -220,7 +220,11 @@ const Profile = ({route, navigation}: any) => {
             ) : (
               <FastImage
                 source={
-                  currentUser?.avatar
+                  route?.params?.id == user?.user?.id
+                    ? user?.user?.avatar
+                      ? {uri: PHOTO_URL + user?.user?.avatar}
+                      : profilePlaceholder
+                    : currentUser?.avatar
                     ? {uri: PHOTO_URL + currentUser?.avatar}
                     : profilePlaceholder
                 }
