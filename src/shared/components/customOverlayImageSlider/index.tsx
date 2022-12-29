@@ -9,6 +9,7 @@ import Wrapper from '@components/wrapper';
 import Header from '@components/header';
 import {COLORS} from '@theme/colors';
 import {PHOTO_URL} from '@utils/endpoints';
+import RenderImage from '@components/renderImage';
 //
 interface Props {
   images: [] | any;
@@ -22,9 +23,7 @@ const CustomOverlayImageSlider = ({
   toggleOverlay,
 }: Partial<Props>) => {
   const listItem = (item: any) => {
-    return (
-      <Image source={{uri: PHOTO_URL + item?.item}} style={[styles.image]} />
-    );
+    return <RenderImage item={item?.item} imageStyles={styles.image} />;
   };
   const [active, setActive] = useState(0);
   const [total, setTotal] = useState(images?.length);
@@ -60,6 +59,7 @@ const CustomOverlayImageSlider = ({
               renderItem={listItem}
               horizontal
               showsHorizontalScrollIndicator={false}
+              pagingEnabled
               onScroll={({nativeEvent}) => change(nativeEvent)}
             />
           </View>

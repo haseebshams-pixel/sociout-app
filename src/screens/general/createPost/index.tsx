@@ -1,10 +1,13 @@
 //import liraries
+import {chatIcon} from '@assets/icons';
 import CustomText from '@components/customText';
 import Header from '@components/header';
 import Wrapper from '@components/wrapper';
+import {navigate} from '@services/navService';
 import {COLORS} from '@theme/colors';
 import {GST} from '@theme/globalStyles';
 import {RF, WP} from '@theme/responsive';
+import {ROUTES} from '@utils/routes';
 import React, {useState} from 'react';
 import {StatusBar, View} from 'react-native';
 import {Avatar} from 'react-native-elements';
@@ -59,7 +62,14 @@ const CreatePost = ({route}: any) => {
   return (
     <Wrapper>
       <StatusBar translucent barStyle={'dark-content'} />
-      <Header title={'Create Post'} />
+      <Header
+        title={'Create Post'}
+        rightIcon={chatIcon}
+        userIcon
+        backAction={() => navigate('ProfileStack')}
+        onPress={() => navigate(ROUTES.CHAT)}
+        borderBottom
+      />
     </Wrapper>
   );
 };

@@ -25,10 +25,10 @@ const ShareModalize = ({
   sharePostData,
 }: Partial<Props>) => {
   return (
-    <Modalize ref={modalizeRef} modalHeight={RF(170)} withReactModal>
+    <Modalize ref={modalizeRef} modalHeight={RF(140)} withReactModal>
       <View style={[styles.modalizeContainer]}>
         <TouchableOpacity style={[GST.FLEX_ROW]} onPressIn={handleShare}>
-          <Share2 color={COLORS.GRAY} />
+          <Share2 stroke={COLORS.GRAY} />
           <View style={[GST.ml3]}>
             <CustomText bold color={COLORS.GRAY} size={15}>
               Repost

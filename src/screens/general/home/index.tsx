@@ -1,5 +1,7 @@
 //import liraries
+import {NotFoundAnim} from '@assets/animations';
 import {chatIcon} from '@assets/icons';
+import LotieAnimation from '@components/animation';
 import CustomLoading from '@components/customLoading';
 import CustomText from '@components/customText';
 import Header from '@components/header';
@@ -8,27 +10,26 @@ import Wrapper from '@components/wrapper';
 import {navigate} from '@services/navService';
 import {getAllPosts} from '@services/postService';
 import {COLORS} from '@theme/colors';
-import {GST} from '@theme/globalStyles';
-import {RF} from '@theme/responsive';
 import {ROUTES} from '@utils/routes';
 import React, {useEffect, useState} from 'react';
-import {FlatList} from 'react-native';
-import {SkypeIndicator} from 'react-native-indicators';
+import {ActivityIndicator, FlatList} from 'react-native';
 import {styles} from './styles';
 
 // create a component
 const Home = () => {
   const [skip, setSkip] = useState(0);
+  const [loadMore, setLoadMore] = useState<boolean>(false);
   const [loader, setLaoder] = useState(false);
-  const [bottomLoader, setBottomLoader] = useState(false);
-  const [alreadyLoading, setAlreadyLoading] = useState(false);
-  const [endReached, setEndReached] = useState(false);
   const [posts, setPosts] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const getPosts = (k: number) => {
-    setAlreadyLoading(true);
     getAllPosts(k)
       .then(({data}: any) => {
+        if (data.length < 5) {
+          setLoadMore(false);
+        } else {
+          setLoadMore(true);
+        }
         setPosts(p => {
           return p.concat(data);
         });
@@ -38,9 +39,7 @@ const Home = () => {
       })
       .finally(() => {
         setLaoder(false);
-        setBottomLoader(false);
         setRefresh(false);
-        setAlreadyLoading(false);
       });
   };
   useEffect(() => {
@@ -49,14 +48,8 @@ const Home = () => {
   }, []);
 
   const FooterComponent = () => {
-    if (bottomLoader && !refresh) {
-      return (
-        <SkypeIndicator
-          size={RF(20)}
-          color={COLORS.BLACK}
-          style={[GST.mt3, GST.mb3]}
-        />
-      );
+    if (loadMore && !refresh) {
+      return <ActivityIndicator color={COLORS.BLACK} size="large" />;
     } else {
       return null;
     }
@@ -77,27 +70,17 @@ const Home = () => {
         data={posts}
         style={[styles.container]}
         onEndReached={() => {
-          if (!alreadyLoading) {
-            if (endReached && !refresh && bottomLoader) {
-              let k = skip + 5;
-              setSkip(k);
-              getPosts(k);
-              setEndReached(false);
-            }
+          if (!refresh && loadMore) {
+            let k = skip + 5;
+            setSkip(k);
+            getPosts(k);
           }
         }}
-        onMomentumScrollBegin={() => {
-          if (posts?.length != 0) {
-            setBottomLoader(true);
-            setEndReached(true);
-          }
-        }}
-        onEndReachedThreshold={0}
         ListFooterComponent={FooterComponent}
         refreshing={refresh}
         onRefresh={() => {
-          setBottomLoader(false);
-          setEndReached(false);
+          setRefresh(true);
+          setSkip(0);
           setRefresh(true);
           setPosts([]);
           setSkip(0);
@@ -105,7 +88,7 @@ const Home = () => {
         }}
         ListHeaderComponent={() =>
           posts?.length == 0 && !loader && !refresh ? (
-            <CustomText>No Post found!</CustomText>
+            <LotieAnimation Pic={NotFoundAnim} Message={'No Posts Found!'} />
           ) : null
         }
         ListHeaderComponentStyle={[styles.listHeader]}

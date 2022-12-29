@@ -13,6 +13,7 @@ export const styles = StyleSheet.create({
     width: WP(100),
     height: RF(200),
     resizeMode: 'cover',
+    backgroundColor: COLORS.LIGHT_GRAY,
   },
   listContainer: {
     justifyContent: 'center',

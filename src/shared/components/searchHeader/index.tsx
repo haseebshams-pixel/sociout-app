@@ -15,7 +15,7 @@ const HeaderComponent = ({searchHandler, title}: any) => {
   };
   return (
     <>
-      <View style={styles.inputContainer}>
+      <View style={[styles.inputContainer, GST.mt2]}>
         <Icon
           containerStyle={{paddingRight: RF(10)}}
           name={'search-outline'}
@@ -50,12 +50,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: PRIMARY,
-    padding: RF(10),
-    ...GST.mx3,
+    paddingVertical: RF(7),
+    paddingHorizontal: RF(4),
+    ...GST.mx4,
     borderRadius: RF(8),
   },
   headerstyle: {
-    height: RF(45),
+    height: RF(35),
     backgroundColor: PRIMARY,
     paddingHorizontal: RF(10),
     alignItems: 'center',

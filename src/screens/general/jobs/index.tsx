@@ -14,6 +14,11 @@ import {SkypeIndicator} from 'react-native-indicators';
 import {GST} from '@theme/globalStyles';
 import CustomText from '@components/customText';
 import CustomLoading from '@components/customLoading';
+import LotieAnimation from '@components/animation';
+import {NotFoundAnim} from '@assets/animations';
+import {chatIcon} from '@assets/icons';
+import {navigate} from '@services/navService';
+import {ROUTES} from '@utils/routes';
 
 // create a component
 const Jobs = ({route}: any) => {
@@ -67,7 +72,14 @@ const Jobs = ({route}: any) => {
 
   return (
     <Wrapper noPaddingBottom>
-      <Header title={'Jobs'} />
+      <Header
+        title={'Jobs'}
+        rightIcon={chatIcon}
+        userIcon
+        backAction={() => navigate('ProfileStack')}
+        onPress={() => navigate(ROUTES.CHAT)}
+        borderBottom
+      />
       <HeaderComponent searchHandler={setSearch} />
 
       <FlatList
@@ -104,7 +116,7 @@ const Jobs = ({route}: any) => {
         }}
         ListHeaderComponent={() =>
           jobs?.length == 0 && !loader && !refresh ? (
-            <CustomText>No Jobs found!</CustomText>
+            <LotieAnimation Pic={NotFoundAnim} Message={'No Jobs Found!'} />
           ) : null
         }
         ListHeaderComponentStyle={[styles.listHeader]}

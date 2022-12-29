@@ -13,6 +13,7 @@ import PostUserLoader from '@loaders/postUserLoader';
 import PostContentLoader from '@loaders/postContentLoader';
 import moment from 'moment';
 import CustomOverlayImageSlider from '@components/customOverlayImageSlider';
+import {PHOTO_URL} from '@utils/endpoints';
 
 //
 interface Props {
@@ -106,12 +107,14 @@ const ShareCard = ({item}: Props) => {
           <>
             <FastImage
               source={
-                postUser?.avatar ? {uri: postUser?.avatar} : profilePlaceholder
+                postUser?.avatar
+                  ? {uri: PHOTO_URL + postUser?.avatar}
+                  : profilePlaceholder
               }
               style={[styles.userPhoto]}
             />
             <View>
-              <CustomText size={15} style={[GST.ml2]}>
+              <CustomText size={13} style={[GST.ml2]}>
                 {postUser?.firstname} {postUser?.lastname}
               </CustomText>
               <CustomText style={[GST.ml2]} color={COLORS.GRAY}>
@@ -126,13 +129,13 @@ const ShareCard = ({item}: Props) => {
       ) : (
         <>
           {item?.PostObject[0]?.text && (
-            <CustomText size={15} style={[GST.mt4]}>
+            <CustomText size={13} style={[GST.mt2]}>
               {item?.PostObject[0]?.text}
             </CustomText>
           )}
 
           {item?.PostObject[0]?.images.length > 0 && (
-            <View style={[GST.CENTER_ALIGN, GST.mt4, {width: WP(80)}]}>
+            <View style={[GST.CENTER_ALIGN, GST.mt2, GST.mb2, {width: WP(80)}]}>
               <CustomImageSlider
                 images={item?.PostObject[0]?.images}
                 onPress={toggleOverlay}
