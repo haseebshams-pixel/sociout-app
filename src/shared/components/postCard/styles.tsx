@@ -14,8 +14,8 @@ export const styles = StyleSheet.create({
     ...GST.mb2,
   },
   userPhoto: {
-    width: RF(40),
-    height: RF(40),
+    width: RF(35),
+    height: RF(35),
     resizeMode: 'contain',
     borderRadius: RF(100),
   },

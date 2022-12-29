@@ -105,9 +105,7 @@ const PostCard = ({item}: Props) => {
 
   const handleShare = () => {
     modalizeRef.current?.close();
-    setTimeout(() => {
-      setLoader(true);
-    }, 1000);
+    setLoader(true);
     let obj = {
       id: sharePostData?.item?.PostObject[0]?._id,
     };
@@ -219,7 +217,7 @@ const PostCard = ({item}: Props) => {
               style={[styles.userPhoto]}
             />
             <View>
-              <CustomText size={15} style={[GST.ml2]}>
+              <CustomText size={13} style={[GST.ml2]}>
                 {postUser?.firstname} {postUser?.lastname}
               </CustomText>
               <CustomText style={[GST.ml2]} color={COLORS.GRAY}>
@@ -236,7 +234,7 @@ const PostCard = ({item}: Props) => {
       ) : (
         <View>
           {item?.PostObject[0]?.text && (
-            <CustomText size={15} style={[GST.mb4]}>
+            <CustomText size={13} style={[GST.mb2]}>
               {item?.PostObject[0]?.text}
             </CustomText>
           )}
@@ -257,10 +255,10 @@ const PostCard = ({item}: Props) => {
             onPress={!like ? handleLike : handleDisLike}
             style={[{justifyContent: 'center'}, GST.FLEX_ROW]}>
             {!like ? (
-              <Heart color={COLORS.BLACK} height={RF(20)} />
+              <Heart stroke={COLORS.BLACK} height={RF(20)} />
             ) : (
               <Heart
-                color={COLORS.PRIMARY}
+                stroke={COLORS.PRIMARY}
                 fill={COLORS.PRIMARY}
                 height={RF(20)}
               />
@@ -270,7 +268,7 @@ const PostCard = ({item}: Props) => {
             </CustomText>
           </TouchableWithoutFeedback>
           <View style={[GST.FLEX_ROW, GST.ml2]}>
-            <MessageSquare color={COLORS.BLACK} height={RF(20)} />
+            <MessageSquare stroke={COLORS.BLACK} height={RF(20)} />
             <CustomText style={[GST.ml1]} size={13}>
               {commentCount}
             </CustomText>
@@ -286,7 +284,7 @@ const PostCard = ({item}: Props) => {
               });
               onOpen();
             }}>
-            <Share color={COLORS.BLACK} height={RF(20)} />
+            <Share stroke={COLORS.BLACK} height={RF(20)} />
           </TouchableWithoutFeedback>
         )}
       </View>

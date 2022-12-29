@@ -1,13 +1,20 @@
 //import liraries
+import {NotFoundAnim} from '@assets/animations';
 import {settingIcon} from '@assets/icons';
 import {profilePlaceholder} from '@assets/images';
+import LotieAnimation from '@components/animation';
+import CustomAlert from '@components/customAlert';
+import CustomLoading from '@components/customLoading';
 import CustomText from '@components/customText';
 import Header from '@components/header';
 import PostCard from '@components/postCard';
 import PrimaryBtn from '@components/primaryBtn';
 import Wrapper from '@components/wrapper';
+import ProfileLoader from '@loaders/profileLoader';
+import UserInfoLoader from '@loaders/userInfoLoader';
 import {resetFriends, setFriends} from '@redux/reducers/friendsSlice';
 import {resetRequests, setRequests} from '@redux/reducers/requestsSlice';
+import {showToast} from '@services/helperService';
 import {navigate} from '@services/navService';
 import {
   acceptRequest,
@@ -22,30 +29,22 @@ import {
 } from '@services/userService';
 import {COLORS} from '@theme/colors';
 import {GST} from '@theme/globalStyles';
-import {HP, RF, WP} from '@theme/responsive';
-import {ROUTES} from '@utils/routes';
-import React, {useEffect, useRef, useState} from 'react';
-import {Animated, StatusBar, View} from 'react-native';
-import FastImage from 'react-native-fast-image';
-import {useDispatch, useSelector} from 'react-redux';
-import {styles} from './styles';
-import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
-import {SkypeIndicator} from 'react-native-indicators';
-import {showToast} from '@services/helperService';
-import ProfileLoader from '@loaders/profileLoader';
-import UserInfoLoader from '@loaders/userInfoLoader';
-import CustomAlert from '@components/customAlert';
-import EditProfile from './editProfileModal';
-import CustomLoading from '@components/customLoading';
 import {PHOTO_URL} from '@utils/endpoints';
+import {ROUTES} from '@utils/routes';
+import React, {useEffect, useState} from 'react';
+import {ActivityIndicator, Animated, StatusBar, View} from 'react-native';
+import FastImage from 'react-native-fast-image';
+import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
+import {useDispatch, useSelector} from 'react-redux';
+import EditProfile from './editProfileModal';
+import {styles} from './styles';
 // create a component
 const Profile = ({route, navigation}: any) => {
   //states
   const {user, friends, requests} = useSelector((state: any) => state.root);
   const [posts, setPosts] = useState<any>([]);
   const [skip, setSkip] = useState<number>(0);
-  const [bottomLoader, setBottomLoader] = useState<boolean>(false);
-  const [endReached, setEndReached] = useState<boolean>(false);
+  const [loadMore, setLoadMore] = useState<boolean>(false);
   const [currentUserFriends, setCurrentFriends] = useState<any>([]);
   const dispatch = useDispatch();
   const [refresh, setRefresh] = useState<boolean>(false);
@@ -64,6 +63,11 @@ const Profile = ({route, navigation}: any) => {
   const getPosts = (id: string, skip: number, isRefreshing: boolean) => {
     getUserPost(id, skip)
       .then(({data}: any) => {
+        if (data.length < 3) {
+          setLoadMore(false);
+        } else {
+          setLoadMore(true);
+        }
         if (isRefreshing) {
           setPosts(data);
         } else {
@@ -77,7 +81,6 @@ const Profile = ({route, navigation}: any) => {
       })
       .finally(() => {
         setLoader(false);
-        setBottomLoader(false);
         setRefresh(false);
       });
   };
@@ -93,7 +96,9 @@ const Profile = ({route, navigation}: any) => {
       .catch(err => {
         console.log('Error', err);
       })
-      .finally(() => {});
+      .finally(() => {
+        setRefresh(false);
+      });
   };
 
   const getFriends = (id: string) => {
@@ -131,6 +136,27 @@ const Profile = ({route, navigation}: any) => {
         console.log('Error', err);
       })
       .finally(() => {});
+  };
+
+  const getRouteUserData = async () => {
+    Promise.all([
+      getFriendShipStatus(route?.params?.id),
+      getFriends(route?.params?.id),
+      fetchUser(route?.params?.id),
+      getPosts(route?.params?.id, 0, true),
+    ]).finally(() => {
+      setRefresh(false);
+    });
+  };
+
+  const getUserData = async () => {
+    Promise.all([
+      getSocialNetwork(route?.params?.id),
+      fetchUser(route?.params?.id),
+      getPosts(route?.params?.id, 0, true),
+    ]).finally(() => {
+      setRefresh(false);
+    });
   };
 
   const handleRemove = () => {
@@ -374,9 +400,7 @@ const Profile = ({route, navigation}: any) => {
       <>
         {!loader && posts?.length == 0 && !refresh && (
           <View style={[styles.listHeader]}>
-            <CustomText style={[GST.mt4]} size={14}>
-              No Post found!
-            </CustomText>
+            <LotieAnimation Pic={NotFoundAnim} Message={'No Posts Found!'} />
           </View>
         )}
       </>
@@ -384,14 +408,8 @@ const Profile = ({route, navigation}: any) => {
   };
 
   const FooterComponent = () => {
-    if (bottomLoader && !refresh && !loader) {
-      return (
-        <SkypeIndicator
-          size={RF(20)}
-          color={COLORS.BLACK}
-          style={[GST.mt3, GST.mb3]}
-        />
-      );
+    if (loadMore && !refresh && !loader) {
+      return <ActivityIndicator color={COLORS.BLACK} size="large" />;
     } else {
       return null;
     }
@@ -428,40 +446,29 @@ const Profile = ({route, navigation}: any) => {
       <View style={[GST.FLEX, styles.container]}>
         <>
           <Animated.FlatList
+            keyExtractor={(_, index) => String(index)}
             renderItem={({item}: any) => <PostCard item={item} />}
             data={posts}
+            initialNumToRender={10}
             onEndReached={() => {
-              if (endReached && !refresh && bottomLoader) {
+              if (!refresh && loadMore) {
                 let k = skip + 3;
                 setSkip(k);
                 getPosts(route?.params?.id, k, false);
-                setEndReached(false);
-              }
-            }}
-            onMomentumScrollBegin={() => {
-              if (!bottomLoader) {
-                setBottomLoader(true);
-                setEndReached(true);
               }
             }}
             refreshing={refresh}
             onRefresh={() => {
-              if (user?.user?.id != route?.params?.id) {
-                fetchFriendShipStatus(route?.params?.id);
-                getFriends(route?.params?.id);
-              } else {
-                getSocialNetwork(route?.params?.id);
-              }
-              setBottomLoader(false);
-              setEndReached(false);
               setRefresh(true);
-              fetchUser(route?.params?.id);
               setSkip(0);
-              getPosts(route?.params?.id, 0, true);
+              if (user?.user?.id != route?.params?.id) {
+                getRouteUserData();
+              } else {
+                getUserData();
+              }
             }}
             ListHeaderComponent={HeaderComponent}
             ListEmptyComponent={EmptyComponent}
-            // stickyHeaderIndices={[0]}
             ListFooterComponent={FooterComponent}
           />
         </>

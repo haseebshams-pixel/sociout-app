@@ -1,9 +1,8 @@
+import RenderImage from '@components/renderImage';
 import {COLORS} from '@theme/colors';
 import {RF, WP} from '@theme/responsive';
-import {PHOTO_URL} from '@utils/endpoints';
 import React, {useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
-import {Image} from 'react-native';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 interface Props {
   images: any;
@@ -27,16 +26,17 @@ const CustomImageSlider = ({images, onPress, isShare}: Partial<Props>) => {
   return (
     <View style={[styles.wrapScroll, {width: isShare ? WP(80) : WP(100)}]}>
       <ScrollView
-        onScroll={({nativeEvent}) => change(nativeEvent)}
+        onMomentumScrollEnd={({nativeEvent}) => change(nativeEvent)}
         showsHorizontalScrollIndicator={false}
         pagingEnabled
         horizontal>
         {images.map((e: any, index: number) => (
-          <TouchableWithoutFeedback key={index} onPress={onPress}>
-            <Image
-              style={[styles.wrapImage, {width: isShare ? WP(80) : WP(100)}]}
-              source={{uri: PHOTO_URL + e}}
+          <TouchableWithoutFeedback onPress={onPress}>
+            <RenderImage
+              item={e}
               key={index}
+              isShare={isShare}
+              imageStyles={styles.wrapImage}
             />
           </TouchableWithoutFeedback>
         ))}
@@ -61,15 +61,16 @@ const styles = StyleSheet.create({
   wrapImage: {
     height: RF(200),
     resizeMode: 'cover',
+    backgroundColor: COLORS.LIGHT_GRAY,
   },
   wrapDot: {
-    position: 'relative',
-    bottom: 0,
+    position: 'absolute',
+    bottom: -RF(18),
     flexDirection: 'row',
     alignSelf: 'center',
   },
   dot: {
-    margin: 3,
+    // margin: 3,
     color: 'transparent',
     borderRadius: 100,
     borderColor: COLORS.LIGHT_GRAY,
@@ -77,13 +78,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     width: RF(8),
     height: RF(8),
+    marginRight: RF(1),
   },
   dotActive: {
-    margin: 3,
+    // margin: 3,
     backgroundColor: COLORS.PRIMARY,
     borderRadius: 100,
     width: RF(8),
     height: RF(8),
+    marginRight: RF(1),
   },
 });
 

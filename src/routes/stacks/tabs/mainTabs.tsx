@@ -101,7 +101,7 @@ const MyTabs = ({navigation}: any) => {
         component={JobsStack}
         options={{
           tabBarIcon: ({color, focused}) => (
-            <Briefcase color={color} width={RF(22)} height={RF(22)} />
+            <Briefcase stroke={color} width={RF(22)} height={RF(22)} />
           ),
         }}
       />
