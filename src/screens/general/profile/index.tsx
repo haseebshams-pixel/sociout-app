@@ -447,7 +447,9 @@ const Profile = ({route, navigation}: any) => {
         <>
           <Animated.FlatList
             keyExtractor={(_, index) => String(index)}
-            renderItem={({item}: any) => <PostCard item={item} />}
+            renderItem={({item}: any) => (
+              <PostCard item={item} navigation={navigation} />
+            )}
             data={posts}
             initialNumToRender={10}
             onEndReached={() => {

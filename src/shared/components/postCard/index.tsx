@@ -3,7 +3,7 @@ import {COLORS} from '@theme/colors';
 import {GST} from '@theme/globalStyles';
 import {RF, WP} from '@theme/responsive';
 import React, {useEffect, useRef, useState} from 'react';
-import {View} from 'react-native';
+import {Pressable, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {styles} from './styles';
 import {profilePlaceholder} from '@assets/images';
@@ -23,6 +23,7 @@ import {Modalize} from 'react-native-modalize';
 import ShareModalize from '@components/shareModalize';
 import CustomLoading from '@components/customLoading';
 import {PHOTO_URL} from '@utils/endpoints';
+import {ROUTES} from '@utils/routes';
 
 //
 interface Props {
@@ -70,6 +71,7 @@ interface Props {
       },
     ];
   };
+  navigation: any;
 }
 interface PostUserInterface {
   DOB: string;
@@ -82,7 +84,7 @@ interface PostUserInterface {
   phonenumber: string;
 }
 
-const PostCard = ({item}: Props) => {
+const PostCard = ({item, navigation}: Props) => {
   const {user} = useSelector((state: any) => state.root.user);
   const [postUser, setPostUser] = useState<Partial<PostUserInterface>>();
   const [like, setLike] = useState(false);
@@ -203,7 +205,16 @@ const PostCard = ({item}: Props) => {
 
   return (
     <View style={[styles.container]}>
-      <View style={[styles.userInfoContainer]}>
+      <Pressable
+        style={[styles.userInfoContainer]}
+        disabled={userLoader}
+        onPress={() =>
+          navigation.push(ROUTES.PROFILESTACK, {
+            id: item?.PostObject[0]?.isShared
+              ? item?.PostObject[0]?.sharedBy
+              : item?.PostObject[0]?.postedBy,
+          })
+        }>
         {userLoader ? (
           <PostUserLoader />
         ) : (
@@ -226,7 +237,7 @@ const PostCard = ({item}: Props) => {
             </View>
           </>
         )}
-      </View>
+      </Pressable>
       {item?.PostObject[0]?.isShared ? (
         <ShareCard item={item} />
       ) : userLoader ? (

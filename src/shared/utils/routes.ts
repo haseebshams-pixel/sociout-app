@@ -23,6 +23,7 @@ export const ROUTES = {
   NOTIFICATIONS: 'Notifications',
 
   //Profile Stack
+  PROFILESTACK: 'ProfileStack',
   PROFILE: 'profile',
   SETTING: 'setting',
   FRIENDS: 'friends',
