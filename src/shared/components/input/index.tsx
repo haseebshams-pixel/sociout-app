@@ -79,7 +79,7 @@ const Input = forwardRef((props: Partial<InputProp>, ref: any) => {
     <View style={[styles.mainContainer, mainContainerStyle]}>
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
         {!!title && (
-          <CustomText size={labelSize} color={titleColor} style={GST.mb2}>
+          <CustomText size={labelSize} color={titleColor} style={GST.mb1}>
             {title}
             <CustomText size={15} color={PRIMARY}>
               {required ? '*' : ''}
@@ -89,7 +89,7 @@ const Input = forwardRef((props: Partial<InputProp>, ref: any) => {
         {!!charLimit && (
           <CustomText size={labelSize}>
             {value?.length > 0 && value.length}
-            <CustomText size={labelSize} color={SECONDARY_GRAY} style={GST.mb2}>
+            <CustomText size={labelSize} color={SECONDARY_GRAY} style={GST.mb1}>
               {value?.length > 0 && '/'}
               {charLimit}
             </CustomText>

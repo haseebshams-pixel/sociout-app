@@ -135,7 +135,7 @@ const ShareCard = ({item}: Props) => {
           )}
 
           {item?.PostObject[0]?.images.length > 0 && (
-            <View style={[GST.CENTER_ALIGN, GST.mt2, GST.mb2, {width: WP(80)}]}>
+            <View style={[GST.CENTER_ALIGN, GST.mt2, GST.mb3, {width: WP(80)}]}>
               <CustomImageSlider
                 images={item?.PostObject[0]?.images}
                 onPress={toggleOverlay}

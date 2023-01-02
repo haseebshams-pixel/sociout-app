@@ -51,6 +51,8 @@
       "@redux": ["./shared/redux"],
       "@redux/*": ["./shared/redux/*"],
       "@services": ["./shared/services"],
+      "@hooks": ["./shared/hooks"],
+      "@hooks/*": ["./shared/hooks/*"],
       "@services/*": ["./shared/services/*"],
       "@theme": ["./shared/theme"],
       "@theme/*": ["./shared/theme/*"],

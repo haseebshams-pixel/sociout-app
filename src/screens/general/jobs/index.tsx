@@ -1,61 +1,80 @@
 //import liraries
+import {NotFoundAnim} from '@assets/animations';
+import {chatIcon, createIcon} from '@assets/icons';
+import LotieAnimation from '@components/animation';
+import CustomLoading from '@components/customLoading';
 import Header from '@components/header';
 import JobCard from '@components/jobCard';
 import {HeaderComponent} from '@components/searchHeader';
-import {styles} from './styles';
 import Wrapper from '@components/wrapper';
-import {COLORS} from '@theme/colors';
-import {HP, RF} from '@theme/responsive';
-import React, {useEffect, useState} from 'react';
-import {FlatList, View} from 'react-native';
-import {useSelector} from 'react-redux';
 import {getAllJobs} from '@services/jobsService';
-import {SkypeIndicator} from 'react-native-indicators';
-import {GST} from '@theme/globalStyles';
-import CustomText from '@components/customText';
-import CustomLoading from '@components/customLoading';
-import LotieAnimation from '@components/animation';
-import {NotFoundAnim} from '@assets/animations';
-import {chatIcon} from '@assets/icons';
 import {navigate} from '@services/navService';
+import {COLORS} from '@theme/colors';
+import {GST} from '@theme/globalStyles';
 import {ROUTES} from '@utils/routes';
+import React, {useEffect, useRef, useState} from 'react';
+import {ActivityIndicator, FlatList} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+import {styles} from './styles';
+import useDebounce from '@hooks/useDebounce';
+import {resetJobs, setJobsReducer} from '@redux/reducers/jobsSlice';
+import CreateJobModal from '@components/createJobModal';
 
 // create a component
 const Jobs = ({route}: any) => {
-  const {user} = useSelector((state: any) => state.root.user);
+  const {jobs} = useSelector((state: any) => state.root.jobs);
+  const dispatch = useDispatch();
   const [skip, setSkip] = useState(0);
-  const [search, setSearch] = useState<any>('');
+  const [loadMore, setLoadMore] = useState<boolean>(false);
+  const [search, setSearch] = useState<any>('-1');
   const [loader, setLoader] = useState(false);
-  const [bottomLoader, setBottomLoader] = useState(false);
-  const [alreadyLoading, setAlreadyLoading] = useState(false);
-  const [endReached, setEndReached] = useState(false);
-  const [jobs, setJobs] = useState([]);
+  const jobss = useRef([]);
   const [refresh, setRefresh] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  useDebounce(
+    () => {
+      if (search !== '-1') {
+        setLoader(true);
+        dispatch(resetJobs());
+        jobss.current = [];
+        setSkip(0);
+        getJobs(0);
+      }
+    },
+    [search],
+    800,
+  );
 
   const getJobs = (k: number) => {
-    setAlreadyLoading(true);
-    getAllJobs(k, search)
+    let query = '';
+    if (search != '-1') {
+      query = search;
+    }
+    getAllJobs(k, query)
       .then(({data}: any) => {
-        setJobs(p => {
-          return p.concat(data);
-        });
+        if (data.length < 6) {
+          setLoadMore(false);
+        } else {
+          setLoadMore(true);
+        }
+        let x: any = [...jobss.current, ...data];
+        jobss.current = x;
+        dispatch(setJobsReducer({jobs: jobss.current}));
       })
       .catch(err => {
         console.log('Error', err);
       })
       .finally(() => {
         setLoader(false);
-        setBottomLoader(false);
         setRefresh(false);
-        setAlreadyLoading(false);
       });
   };
 
   const FooterComponent = () => {
-    if (bottomLoader && !refresh) {
+    if (loadMore && !refresh) {
       return (
-        <SkypeIndicator
-          size={RF(20)}
+        <ActivityIndicator
+          size={'large'}
           color={COLORS.BLACK}
           style={[GST.mt3, GST.mb3]}
         />
@@ -74,42 +93,30 @@ const Jobs = ({route}: any) => {
     <Wrapper noPaddingBottom>
       <Header
         title={'Jobs'}
-        rightIcon={chatIcon}
+        rightIcon={createIcon}
         userIcon
         backAction={() => navigate('ProfileStack')}
-        onPress={() => navigate(ROUTES.CHAT)}
-        borderBottom
+        onPress={() => setModalVisible(true)}
       />
-      <HeaderComponent searchHandler={setSearch} />
+      <HeaderComponent searchHandler={setSearch} title={'Search Jobs'} />
 
       <FlatList
         renderItem={({item}: any) => <JobCard item={item} />}
         data={jobs}
         style={[styles.container]}
         onEndReached={() => {
-          if (!alreadyLoading) {
-            if (endReached && !refresh && bottomLoader) {
-              let k = skip + 3;
-              setSkip(k);
-              getJobs(k);
-              setEndReached(false);
-            }
+          if (!refresh && loadMore) {
+            let k = skip + 6;
+            setSkip(k);
+            getJobs(k);
           }
         }}
-        onMomentumScrollBegin={() => {
-          if (jobs?.length != 0) {
-            setBottomLoader(true);
-            setEndReached(true);
-          }
-        }}
-        onEndReachedThreshold={0}
         ListFooterComponent={FooterComponent}
         refreshing={refresh}
         onRefresh={() => {
-          setBottomLoader(false);
-          setEndReached(false);
           setRefresh(true);
-          setJobs([]);
+          dispatch(resetJobs());
+          jobss.current = [];
           setSkip(0);
           setSearch('');
           getJobs(0);
@@ -121,7 +128,11 @@ const Jobs = ({route}: any) => {
         }
         ListHeaderComponentStyle={[styles.listHeader]}
       />
-      {!bottomLoader && !refresh && <CustomLoading visible={loader} />}
+      <CustomLoading visible={loader} />
+      <CreateJobModal
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+      />
     </Wrapper>
   );
 };

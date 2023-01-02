@@ -16,6 +16,12 @@ const termsIcon = require('./terms.png');
 const aboutIcon = require('./about.png');
 const deleteIcon = require('./trash.png');
 const moreIcon = require('./more.png');
+const createIcon = require('./create.png');
+const downArrowIcon = require('./down-arrow.png');
+const tickIcon = require('./tick.png');
+const upArrowIcon = require('./uparrow.png');
+const closeIcon = require('./close.png');
+
 export {
   splashlogo,
   back,
@@ -35,4 +41,9 @@ export {
   aboutIcon,
   deleteIcon,
   moreIcon,
+  createIcon,
+  downArrowIcon,
+  tickIcon,
+  upArrowIcon,
+  closeIcon,
 };

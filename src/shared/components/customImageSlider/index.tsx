@@ -31,7 +31,7 @@ const CustomImageSlider = ({images, onPress, isShare}: Partial<Props>) => {
         pagingEnabled
         horizontal>
         {images.map((e: any, index: number) => (
-          <TouchableWithoutFeedback onPress={onPress}>
+          <TouchableWithoutFeedback onPress={onPress} key={index}>
             <RenderImage
               item={e}
               key={index}

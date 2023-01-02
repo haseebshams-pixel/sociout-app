@@ -62,14 +62,7 @@ const CreatePost = ({route}: any) => {
   return (
     <Wrapper>
       <StatusBar translucent barStyle={'dark-content'} />
-      <Header
-        title={'Create Post'}
-        rightIcon={chatIcon}
-        userIcon
-        backAction={() => navigate('ProfileStack')}
-        onPress={() => navigate(ROUTES.CHAT)}
-        borderBottom
-      />
+      <Header title={'Create Post'} />
     </Wrapper>
   );
 };

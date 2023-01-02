@@ -1,11 +1,14 @@
 //import liraries
+import {chatIcon} from '@assets/icons';
 import CustomText from '@components/customText';
 import Header from '@components/header';
 import {HeaderComponent} from '@components/searchHeader';
 import Wrapper from '@components/wrapper';
+import {navigate} from '@services/navService';
 import {COLORS} from '@theme/colors';
 import {GST} from '@theme/globalStyles';
 import {HP, RF, WP} from '@theme/responsive';
+import {ROUTES} from '@utils/routes';
 import React, {useState} from 'react';
 import {StatusBar, View} from 'react-native';
 import {Avatar} from 'react-native-elements';
@@ -60,7 +63,13 @@ const Search = ({route}: any) => {
   return (
     <Wrapper>
       <StatusBar translucent barStyle={'dark-content'} />
-      <Header title={'Search'} />
+      {/* <Header
+        title={'Network'}
+        rightIcon={chatIcon}
+        userIcon
+        backAction={() => navigate('ProfileStack')}
+        onPress={() => navigate(ROUTES.CHAT)}
+      /> */}
       <HeaderComponent searchHandler={setvalue} />
       <View style={{height: HP(2)}} />
     </Wrapper>

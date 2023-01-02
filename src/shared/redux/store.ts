@@ -6,11 +6,12 @@ import bottomTabReducer from './reducers/bottomTabSlice';
 import friendsReducer from './reducers/friendsSlice';
 import requestsReducer from './reducers/requestsSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import jobsReducer from './reducers/jobsSlice';
 
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['user', 'friends', 'requests'],
+  whitelist: ['user', 'friends', 'requests', 'jobs'],
 };
 
 const reducers = combineReducers({
@@ -18,6 +19,7 @@ const reducers = combineReducers({
   bottomTab: bottomTabReducer,
   requests: requestsReducer,
   friends: friendsReducer,
+  jobs: jobsReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducers);
