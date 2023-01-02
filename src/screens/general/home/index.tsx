@@ -16,7 +16,7 @@ import {ActivityIndicator, FlatList} from 'react-native';
 import {styles} from './styles';
 
 // create a component
-const Home = () => {
+const Home = ({navigation}: any) => {
   const [skip, setSkip] = useState(0);
   const [loadMore, setLoadMore] = useState<boolean>(false);
   const [loader, setLaoder] = useState(false);
@@ -65,7 +65,9 @@ const Home = () => {
         onPress={() => navigate(ROUTES.CHAT)}
       />
       <FlatList
-        renderItem={({item}: any) => <PostCard item={item} />}
+        renderItem={({item}: any) => (
+          <PostCard item={item} navigation={navigation} />
+        )}
         data={posts}
         style={[styles.container]}
         onEndReached={() => {

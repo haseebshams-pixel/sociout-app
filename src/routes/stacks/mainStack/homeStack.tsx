@@ -13,7 +13,7 @@ const FeedStack = () => {
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name={ROUTES.HOME} component={Home} />
       <Stack.Screen
-        name={'ProfileStack'}
+        name={ROUTES.PROFILESTACK}
         component={ProfileStack}
         initialParams={{id: user?.user?.id}}
       />
