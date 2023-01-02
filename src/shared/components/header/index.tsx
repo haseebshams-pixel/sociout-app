@@ -28,6 +28,7 @@ interface viewProp extends ViewProps {
   leftText: string;
   rightText: string;
   userIcon: any;
+  rightIconHeight: any;
 }
 
 const Header = (props: Partial<viewProp>) => {
@@ -47,6 +48,7 @@ const Header = (props: Partial<viewProp>) => {
     leftText,
     rightText,
     userIcon,
+    rightIconHeight,
   } = props;
   const {user} = useSelector((state: any) => state?.root?.user);
   return (
@@ -100,7 +102,13 @@ const Header = (props: Partial<viewProp>) => {
             style={[styles.containerView, styles.container]}>
             <FastImage
               source={rightIcon}
-              style={[styles.img, {backgroundColor: iconColor, height: RF(20)}]}
+              style={[
+                styles.img,
+                {
+                  backgroundColor: iconColor,
+                  height: rightIconHeight ? rightIconHeight : RF(18),
+                },
+              ]}
               resizeMode={'contain'}
             />
           </Pressable>
@@ -126,9 +134,11 @@ const styles = StyleSheet.create({
   mainContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    ...GST.py4,
+    ...GST.py2,
     ...GST.px3,
     position: 'relative',
+    minHeight: RF(50),
+    justifyContent: 'center',
   },
   subContainer: {flex: 0.2},
   middleContainer: {

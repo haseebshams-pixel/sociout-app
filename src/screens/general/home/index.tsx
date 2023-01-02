@@ -63,7 +63,6 @@ const Home = () => {
         userIcon
         backAction={() => navigate('ProfileStack')}
         onPress={() => navigate(ROUTES.CHAT)}
-        borderBottom
       />
       <FlatList
         renderItem={({item}: any) => <PostCard item={item} />}

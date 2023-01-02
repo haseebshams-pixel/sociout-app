@@ -5,9 +5,9 @@ import {StyleSheet} from 'react-native';
 
 export const styles = StyleSheet.create({
   container: {
-    ...GST.mt4,
+    ...GST.mb4,
     backgroundColor: COLORS.WHITE,
-    padding: RF(15),
+    padding: RF(10),
     borderRadius: RF(5),
     shadowColor: '#000',
     shadowOffset: {

@@ -5781,7 +5781,7 @@ moment-timezone@^0.5.21:
   dependencies:
     moment ">= 2.9.0"
 
-"moment@>= 2.9.0", moment@^2.22.0, moment@^2.22.2, moment@^2.29.4:
+"moment@>= 2.9.0", moment@^2.22.2, moment@^2.29.4:
   version "2.29.4"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.4.tgz#3dbe052889fe7c1b2ed966fcb3a77328964ef108"
   integrity sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==
@@ -6482,20 +6482,6 @@ react-native-content-loader@^0.1.6:
   dependencies:
     d3-interpolate "^1.1.5"
 
-react-native-date-picker@^4.2.5:
-  version "4.2.5"
-  resolved "https://registry.yarnpkg.com/react-native-date-picker/-/react-native-date-picker-4.2.5.tgz#d2e3ff6c8616313bdd75c48ac56a84a57d8a27a3"
-  integrity sha512-YjwiMpZEnVVS+ymLvmJDicVZ3pSR+nJHgtAhctMl6fO8f7iRNcYhY427gemlTBf2Ji+XIAK0Agyl255DhaemFw==
-  dependencies:
-    prop-types "^15.8.1"
-
-react-native-datepicker@^1.7.2:
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/react-native-datepicker/-/react-native-datepicker-1.7.2.tgz#58d0822591a0ac9b32aba082650222a0ee29669d"
-  integrity sha512-ses0N1y44fYBmlejYwR2i+dGnQQ8v5/gacX2CrbFJiWxbcQaRuxexsZPB9YQuQkAy+uKz5Gti3Lrp3dh9BfkzA==
-  dependencies:
-    moment "^2.22.0"
-
 react-native-elements@^3.4.2:
   version "3.4.2"
   resolved "https://registry.yarnpkg.com/react-native-elements/-/react-native-elements-3.4.2.tgz#66602be9c5e0e0a2a831913adec80ff6518d1ee2"
@@ -6509,6 +6495,11 @@ react-native-elements@^3.4.2:
     opencollective-postinstall "^2.0.3"
     react-native-ratings "8.0.4"
     react-native-size-matters "^0.3.1"
+
+react-native-email-link@^1.14.3:
+  version "1.14.3"
+  resolved "https://registry.yarnpkg.com/react-native-email-link/-/react-native-email-link-1.14.3.tgz#188d501ab9cbbee9c6aa5d1190149b071f7c51d2"
+  integrity sha512-3biiaDKjJft6/13cYQkh/CmVae+pU7j+ThX7lFDu7eR6iRrMf9mTXyjejSboWr/M+xE34Vm0bKy8R1tXKjC2zQ==
 
 react-native-fast-image@^8.6.0:
   version "8.6.1"

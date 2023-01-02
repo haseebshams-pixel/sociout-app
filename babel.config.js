@@ -12,6 +12,7 @@ module.exports = {
           '@components': './src/shared/components',
           '@redux': './src/shared/redux',
           '@services': './src/shared/services',
+          '@hooks': './src/shared/hooks',
           '@theme': './src/shared/theme',
           '@utils': './src/shared/utils',
           '@loaders': './src/shared/loaders',

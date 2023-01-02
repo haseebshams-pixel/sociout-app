@@ -22,6 +22,8 @@ const ENDPOINTS = {
   GETFRIENDSHIPSTATUS: 'friends/check/',
   GETJOBS: 'jobs/search',
   EDITUSERPROFILE: 'users/mobile-edit',
+  DELETEJOB: 'jobs/',
+  ADDJOB: 'jobs/',
 };
 
 export {BASE_URL, ENDPOINTS, PHOTO_URL};

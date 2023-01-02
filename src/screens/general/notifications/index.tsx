@@ -1,7 +1,10 @@
 //import liraries
+import {chatIcon} from '@assets/icons';
 import Header from '@components/header';
 import Wrapper from '@components/wrapper';
+import {navigate} from '@services/navService';
 import {COLORS} from '@theme/colors';
+import {ROUTES} from '@utils/routes';
 import React, {useState} from 'react';
 import {StatusBar} from 'react-native';
 import {useSelector} from 'react-redux';
@@ -14,7 +17,11 @@ const Notifications = ({route}: any) => {
 
   return (
     <Wrapper>
-      <Header title={'Notifications'} />
+      <Header
+        title={'Notifications'}
+        userIcon
+        backAction={() => navigate('ProfileStack')}
+      />
     </Wrapper>
   );
 };
