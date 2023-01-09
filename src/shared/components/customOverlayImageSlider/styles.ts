@@ -22,4 +22,9 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingBottom: RF(100),
   },
+  video: {
+    height: RF(200),
+    width: WP(100),
+    backgroundColor: COLORS.LIGHT_GRAY,
+  },
 });

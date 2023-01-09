@@ -7,7 +7,7 @@ import {Pressable, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {styles} from './styles';
 import {profilePlaceholder} from '@assets/images';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import CustomImageSlider from '@components/customImageSlider';
 import {Heart, MessageSquare, Share} from 'react-native-feather';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
@@ -17,13 +17,21 @@ import PostContentLoader from '@loaders/postContentLoader';
 import ShareCard from '@components/shareCard';
 import moment from 'moment';
 import CustomOverlayImageSlider from '@components/customOverlayImageSlider';
-import {dislikePost, likePost, sharePost} from '@services/postService';
+import {
+  deletePost,
+  deleteSharePost,
+  dislikePost,
+  likePost,
+  sharePost,
+} from '@services/postService';
 import {showToast} from '@services/helperService';
 import {Modalize} from 'react-native-modalize';
 import ShareModalize from '@components/shareModalize';
 import CustomLoading from '@components/customLoading';
 import {PHOTO_URL} from '@utils/endpoints';
 import {ROUTES} from '@utils/routes';
+import CustomOptions from '@components/customOption';
+import {setPostsReducer} from '@redux/reducers/postsSlice';
 
 //
 interface Props {
@@ -36,6 +44,7 @@ interface Props {
         _id: string;
         text: string;
         images: [];
+        videos: [];
         postedBy: string;
         date: string;
         isShared: boolean;
@@ -85,7 +94,8 @@ interface PostUserInterface {
 }
 
 const PostCard = ({item, navigation}: Props) => {
-  const {user} = useSelector((state: any) => state.root.user);
+  const {user, posts} = useSelector((state: any) => state.root);
+  const dispatch = useDispatch();
   const [postUser, setPostUser] = useState<Partial<PostUserInterface>>();
   const [like, setLike] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
@@ -96,6 +106,28 @@ const PostCard = ({item, navigation}: Props) => {
   const modalizeRef = useRef<Modalize>(null);
   const [sharePostData, setSharePost] = useState<any>({});
   const [loader, setLoader] = useState(false);
+
+  const [allfiles, setAllFiles] = useState<{link: any; type: string}[]>([]);
+  const setupFiles = () => {
+    let filesArr: {link: any; type: string}[] = [];
+    let images = item?.PostObject[0]?.images;
+    let videos = item?.PostObject[0]?.videos;
+    images.forEach((element: any) => {
+      let obj = {
+        link: element,
+        type: 'image',
+      };
+      filesArr.push(obj);
+    });
+    videos.forEach((element: any) => {
+      let obj = {
+        link: element,
+        type: 'video',
+      };
+      filesArr.push(obj);
+    });
+    setAllFiles(filesArr);
+  };
 
   const onOpen = () => {
     modalizeRef.current?.open();
@@ -121,6 +153,38 @@ const PostCard = ({item, navigation}: Props) => {
       .finally(() => {
         setLoader(false);
       });
+  };
+
+  const editJobHandler = () => {
+    //  setModalVisible(true);
+  };
+  const deleteJobHandler = () => {
+    let backupjobs = [...posts?.posts];
+    var filterArr = posts?.posts.filter((itm: any) => {
+      return itm?._id != item?._id;
+    });
+    dispatch(setPostsReducer({posts: filterArr}));
+    item?.PostObject[0]?.isShared
+      ? deleteSharePost(item?.PostObject[0]?._id)
+          .then(() => {
+            showToast('Succes', 'Deleted Successfuly', true);
+          })
+          .catch(e => {
+            console.log('ERROR', e);
+            showToast('Request Failed', e?.response.data, false);
+            dispatch(setPostsReducer({posts: backupjobs}));
+          })
+          .finally(() => {})
+      : deletePost(item?.PostObject[0]?._id)
+          .then(() => {
+            showToast('Succes', 'Deleted Successfuly', true);
+          })
+          .catch(e => {
+            console.log('ERROR', e);
+            showToast('Request Failed', e?.response.data, false);
+            dispatch(setPostsReducer({posts: backupjobs}));
+          })
+          .finally(() => {});
   };
 
   const fetchUser = async () => {
@@ -190,7 +254,7 @@ const PostCard = ({item, navigation}: Props) => {
   const postActions = async () => {
     setLikeCount(item?.likedBy?.length);
     var filterArray = item?.likedBy.filter((id: string) => {
-      return id == user?.id;
+      return id == user?.user?.id;
     });
     if (filterArray.length > 0) {
       setLike(true);
@@ -199,9 +263,10 @@ const PostCard = ({item, navigation}: Props) => {
     setAllComments(item?.CommentObject);
   };
   useEffect(() => {
+    setupFiles();
     fetchUser();
     postActions();
-  }, []);
+  }, [item?._id]);
 
   return (
     <View style={[styles.container]}>
@@ -250,12 +315,10 @@ const PostCard = ({item, navigation}: Props) => {
             </CustomText>
           )}
 
-          {item?.PostObject[0]?.images?.length > 0 && (
+          {(item?.PostObject[0]?.images?.length > 0 ||
+            item?.PostObject[0]?.videos?.length > 0) && (
             <View style={[GST.CENTER_ALIGN, GST.mb2, {width: WP(100)}]}>
-              <CustomImageSlider
-                images={item?.PostObject[0]?.images}
-                onPress={toggleOverlay}
-              />
+              <CustomImageSlider files={allfiles} onPress={toggleOverlay} />
             </View>
           )}
         </View>
@@ -299,9 +362,20 @@ const PostCard = ({item, navigation}: Props) => {
           </TouchableWithoutFeedback>
         )}
       </View>
+      {user?.user?.id ===
+        (item?.PostObject[0]?.isShared
+          ? item?.PostObject[0]?.sharedBy
+          : item?.PostObject[0]?.postedBy) && (
+        <CustomOptions
+          options={['Edit', 'Delete', 'Cancel']}
+          actions={[editJobHandler, deleteJobHandler]}
+          redIndex={1}
+        />
+      )}
+
       {visible && (
         <CustomOverlayImageSlider
-          images={item?.PostObject[0]?.images}
+          files={allfiles}
           visible={visible}
           toggleOverlay={toggleOverlay}
         />
@@ -311,7 +385,6 @@ const PostCard = ({item, navigation}: Props) => {
         handleShare={handleShare}
         sharePostData={sharePostData}
       />
-
       {!!loader && <CustomLoading visible={loader} />}
     </View>
   );

@@ -44,6 +44,8 @@ interface InputProp extends TextInputProps {
   tintColor: any;
   charLimit: number;
   value: any;
+  multiLineStyle: ViewStyle | any;
+  // onFocus: any;
 }
 
 const Input = forwardRef((props: Partial<InputProp>, ref: any) => {
@@ -72,6 +74,8 @@ const Input = forwardRef((props: Partial<InputProp>, ref: any) => {
     tintColor,
     charLimit,
     titleSize,
+    multiLineStyle,
+    // onFocus,
   } = props;
   const labelSize = titleSize ? titleSize : ANDROID ? 15 : 14;
 
@@ -120,11 +124,16 @@ const Input = forwardRef((props: Partial<InputProp>, ref: any) => {
           />
         )}
         <TextInput
+          // onFocus={onFocus}
           ref={ref}
           maxLength={charLimit || props.maxLength}
           pointerEvents={editable ? 'auto' : 'none'}
           {...props}
-          style={[styles.input, multiline && styles.multiline, inputStyle]}
+          style={[
+            styles.input,
+            multiline && multiLineStyle && multiLineStyle,
+            inputStyle,
+          ]}
           placeholderTextColor={SECONDARY_GRAY}
           onKeyPress={e => setKeyPress && setKeyPress(e.nativeEvent.key)}
         />
@@ -162,7 +171,6 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    paddingRight: RF(14),
     fontFamily: REGULAR,
     color: BLACK,
     fontSize: RF(15),
@@ -177,9 +185,6 @@ const styles = StyleSheet.create({
     borderColor: 'lightgray',
     borderRadius: RF(10),
     ...GST.mb4,
-  },
-  multiline: {
-    maxHeight: RF(80),
   },
   flexStart: {
     alignItems: 'flex-start',

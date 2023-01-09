@@ -7,20 +7,24 @@ import CustomText from '@components/customText';
 import Header from '@components/header';
 import PostCard from '@components/postCard';
 import Wrapper from '@components/wrapper';
+import {resetPosts, setPostsReducer} from '@redux/reducers/postsSlice';
 import {navigate} from '@services/navService';
 import {getAllPosts} from '@services/postService';
 import {COLORS} from '@theme/colors';
 import {ROUTES} from '@utils/routes';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {ActivityIndicator, FlatList} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 import {styles} from './styles';
 
 // create a component
 const Home = ({navigation}: any) => {
+  const {posts} = useSelector((state: any) => state.root.posts);
+  const dispatch = useDispatch();
   const [skip, setSkip] = useState(0);
   const [loadMore, setLoadMore] = useState<boolean>(false);
   const [loader, setLaoder] = useState(false);
-  const [posts, setPosts] = useState([]);
+  const postss = useRef([]);
   const [refresh, setRefresh] = useState(false);
   const getPosts = (k: number) => {
     getAllPosts(k)
@@ -30,9 +34,9 @@ const Home = ({navigation}: any) => {
         } else {
           setLoadMore(true);
         }
-        setPosts(p => {
-          return p.concat(data);
-        });
+        let x: any = [...postss.current, ...data];
+        postss.current = x;
+        dispatch(setPostsReducer({posts: postss.current}));
       })
       .catch(err => {
         console.log('Error', err);
@@ -83,7 +87,8 @@ const Home = ({navigation}: any) => {
           setRefresh(true);
           setSkip(0);
           setRefresh(true);
-          setPosts([]);
+          postss.current = [];
+          dispatch(resetPosts());
           setSkip(0);
           getPosts(0);
         }}

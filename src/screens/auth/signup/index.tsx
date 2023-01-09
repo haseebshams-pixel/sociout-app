@@ -15,7 +15,7 @@ import {RegistrationVS} from '@utils/validations';
 import {Formik} from 'formik';
 import React, {useState} from 'react';
 import {View} from 'react-native';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useDispatch} from 'react-redux';
 import styles from './styles';
 
@@ -136,7 +136,7 @@ const SignUp = () => {
                 />
                 <Input
                   returnKeyType={'done'}
-                  onSubmitEditing={handleSubmit}
+                  // onSubmitEditing={handleSubmit}
                   value={values.password}
                   placeholder={'Password'}
                   textContentType={'password'}
@@ -151,7 +151,7 @@ const SignUp = () => {
                 />
                 <Input
                   returnKeyType={'done'}
-                  onSubmitEditing={handleSubmit}
+                  // onSubmitEditing={handleSubmit}
                   value={values.confirmPassword}
                   placeholder={'Confirm Password'}
                   textContentType={'password'}

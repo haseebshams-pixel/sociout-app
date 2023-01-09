@@ -4,9 +4,6 @@ import {GST} from '@theme/globalStyles';
 import React, {useState} from 'react';
 import {Pressable, View} from 'react-native';
 import {styles} from './styles';
-import OptionsMenu from 'react-native-option-menu';
-import {moreIcon} from '@assets/icons';
-import {RF} from '@theme/responsive';
 import moment from 'moment';
 import {useDispatch, useSelector} from 'react-redux';
 import {deleteJob} from '@services/jobsService';
@@ -14,6 +11,7 @@ import {showToast} from '@services/helperService';
 import {setJobsReducer} from '@redux/reducers/jobsSlice';
 import CreateJobModal from '@components/createJobModal';
 import JobModal from '@components/jobModal';
+import CustomOptions from '@components/customOption';
 
 interface Props {
   item: {
@@ -79,19 +77,11 @@ const JobCard = ({item}: Partial<Props>) => {
         {moment(item?.date).fromNow()}
       </CustomText>
       {item?.postedBy == user?.user?.id && (
-        <View style={[{position: 'absolute', right: RF(5), top: RF(15)}]}>
-          <OptionsMenu
-            button={moreIcon}
-            buttonStyle={{
-              width: RF(20),
-              height: RF(20),
-              resizeMode: 'contain',
-            }}
-            destructiveIndex={1}
-            options={['Edit', 'Delete', 'Cancel']}
-            actions={[editJobHandler, deleteJobHandler]}
-          />
-        </View>
+        <CustomOptions
+          options={['Edit', 'Delete', 'Cancel']}
+          actions={[editJobHandler, deleteJobHandler]}
+          redIndex={1}
+        />
       )}
       <CreateJobModal
         modalVisible={modalVisible}

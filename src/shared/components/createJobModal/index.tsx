@@ -14,7 +14,7 @@ import {CreateJobVS} from '@utils/validations';
 import {Formik} from 'formik';
 import React from 'react';
 import {Modal, StyleSheet, View} from 'react-native';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useDispatch, useSelector} from 'react-redux';
 
 const CreateJobModal = ({modalVisible, setModalVisible, item, isEdit}: any) => {
@@ -228,6 +228,7 @@ const CreateJobModal = ({modalVisible, setModalVisible, item, isEdit}: any) => {
                         containerStyle={styles.inputContainer}
                         titleSize={12}
                         required
+                        multiLineStyle={[styles.multiLineStyle]}
                       />
                     </View>
                     <CustomLoading visible={isSubmitting} />
@@ -287,6 +288,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  multiLineStyle: {
+    maxHeight: RF(80),
   },
 });
 

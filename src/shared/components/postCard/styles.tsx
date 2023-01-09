@@ -12,6 +12,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     ...GST.mb2,
+    alignSelf: 'flex-start',
   },
   userPhoto: {
     width: RF(35),

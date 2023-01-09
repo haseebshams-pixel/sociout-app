@@ -1,15 +1,21 @@
 import RenderImage from '@components/renderImage';
 import {COLORS} from '@theme/colors';
 import {RF, WP} from '@theme/responsive';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 interface Props {
-  images: any;
+  files: any;
   onPress: any;
   isShare: boolean;
+  isLocal: boolean;
 }
-const CustomImageSlider = ({images, onPress, isShare}: Partial<Props>) => {
+const CustomImageSlider = ({
+  files,
+  onPress,
+  isShare,
+  isLocal,
+}: Partial<Props>) => {
   const [active, setActive] = useState(0);
 
   const change = (nativeEvent: any) => {
@@ -30,19 +36,23 @@ const CustomImageSlider = ({images, onPress, isShare}: Partial<Props>) => {
         showsHorizontalScrollIndicator={false}
         pagingEnabled
         horizontal>
-        {images.map((e: any, index: number) => (
+        {files.map((e: any, index: number) => (
           <TouchableWithoutFeedback onPress={onPress} key={index}>
             <RenderImage
-              item={e}
+              isLocal={isLocal}
+              item={isLocal ? e?.uri : e?.link}
               key={index}
               isShare={isShare}
+              isVideo={e?.type === 'video'}
               imageStyles={styles.wrapImage}
+              videoStyles={styles.wrapVideo}
             />
           </TouchableWithoutFeedback>
         ))}
       </ScrollView>
+
       <View style={styles.wrapDot}>
-        {images.map((e: any, index: number) => (
+        {files.map((e: any, index: number) => (
           <View
             key={index}
             style={active === index ? styles.dotActive : styles.dot}
@@ -61,6 +71,11 @@ const styles = StyleSheet.create({
   wrapImage: {
     height: RF(200),
     resizeMode: 'cover',
+    backgroundColor: COLORS.LIGHT_GRAY,
+  },
+  wrapVideo: {
+    height: RF(200),
+    width: WP(100),
     backgroundColor: COLORS.LIGHT_GRAY,
   },
   wrapDot: {

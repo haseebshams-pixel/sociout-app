@@ -1,4 +1,4 @@
-import {HTTP_CLIENT} from '@utils/config';
+import {HTTP_CLIENT, HTTP_CLIENT2} from '@utils/config';
 import {ENDPOINTS} from '@utils/endpoints';
 
 const getAllPosts = (skip: number) => {
@@ -15,5 +15,23 @@ const dislikePost = (id: string) => {
 const sharePost = (obj: any) => {
   return HTTP_CLIENT.post(ENDPOINTS.SHAREPOST, obj);
 };
+const deletePost = (id: string | undefined) => {
+  return HTTP_CLIENT.delete(`${ENDPOINTS.DELETEPOST}${id}`);
+};
+const deleteSharePost = (id: string | undefined) => {
+  return HTTP_CLIENT.delete(`${ENDPOINTS.DELETESHAREPOST}${id}`);
+};
 
-export {getAllPosts, likePost, dislikePost, sharePost};
+const createPost = (params: object) => {
+  return HTTP_CLIENT2.post(ENDPOINTS.CREATEPOST, params);
+};
+
+export {
+  getAllPosts,
+  likePost,
+  dislikePost,
+  sharePost,
+  deletePost,
+  deleteSharePost,
+  createPost,
+};

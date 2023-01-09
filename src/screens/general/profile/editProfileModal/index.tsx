@@ -21,7 +21,7 @@ import {Modal, Text, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import ImagePicker from 'react-native-image-crop-picker';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useDispatch, useSelector} from 'react-redux';
 import EditOverlay from './editOverlay';
 import {styles} from './styles';
@@ -269,6 +269,7 @@ const EditProfile = ({modalVisible, setModalVisible}: any) => {
                         inputStyle={[styles.inputStyle]}
                         containerStyle={styles.inputContainer}
                         titleSize={12}
+                        multiLineStyle={[styles.multiLineStyle]}
                       />
                     </View>
                     <CustomLoading visible={isSubmitting} />

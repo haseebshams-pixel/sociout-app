@@ -26,6 +26,7 @@ interface Props {
         _id: string;
         text: string;
         images: [];
+        videos: [];
         postedBy: string;
         date: string;
         isShared: boolean;
@@ -77,6 +78,27 @@ const ShareCard = ({item}: Props) => {
   const [postUser, setPostUser] = useState<Partial<PostUserInterface>>();
   const [userLoader, setUserLoader] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [allfiles, setAllFiles] = useState<{link: any; type: string}[]>([]);
+  const setupFiles = () => {
+    let filesArr: {link: any; type: string}[] = [];
+    let images = item?.PostObject[0]?.images;
+    let videos = item?.PostObject[0]?.videos;
+    images.forEach((element: any) => {
+      let obj = {
+        link: element,
+        type: 'image',
+      };
+      filesArr.push(obj);
+    });
+    videos.forEach((element: any) => {
+      let obj = {
+        link: element,
+        type: 'video',
+      };
+      filesArr.push(obj);
+    });
+    setAllFiles(filesArr);
+  };
 
   const toggleOverlay = () => {
     setVisible(!visible);
@@ -95,6 +117,7 @@ const ShareCard = ({item}: Props) => {
       });
   };
   useEffect(() => {
+    setupFiles();
     fetchUser();
   }, []);
 
@@ -137,7 +160,7 @@ const ShareCard = ({item}: Props) => {
           {item?.PostObject[0]?.images.length > 0 && (
             <View style={[GST.CENTER_ALIGN, GST.mt2, GST.mb3, {width: WP(80)}]}>
               <CustomImageSlider
-                images={item?.PostObject[0]?.images}
+                files={allfiles}
                 onPress={toggleOverlay}
                 isShare
               />
@@ -147,7 +170,7 @@ const ShareCard = ({item}: Props) => {
       )}
       {visible && (
         <CustomOverlayImageSlider
-          images={item?.PostObject[0]?.images}
+          files={allfiles}
           visible={visible}
           toggleOverlay={toggleOverlay}
         />

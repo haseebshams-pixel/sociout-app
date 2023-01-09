@@ -24,6 +24,9 @@ const ENDPOINTS = {
   EDITUSERPROFILE: 'users/mobile-edit',
   DELETEJOB: 'jobs/',
   ADDJOB: 'jobs/',
+  DELETEPOST: 'posts/',
+  DELETESHAREPOST: 'posts/share/',
+  CREATEPOST: 'posts/',
 };
 
 export {BASE_URL, ENDPOINTS, PHOTO_URL};

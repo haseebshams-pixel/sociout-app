@@ -15,7 +15,7 @@ import {LoginVS} from '@utils/validations';
 import {Formik} from 'formik';
 import React, {useEffect, useState} from 'react';
 import {Pressable, View} from 'react-native';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useDispatch} from 'react-redux';
 import styles from './styles';
 
@@ -89,7 +89,7 @@ const Login = ({navigation}: any) => {
                 />
                 <Input
                   returnKeyType={'done'}
-                  onSubmitEditing={handleSubmit}
+                  // onSubmitEditing={handleSubmit}
                   value={values.password}
                   placeholder={'Password'}
                   textContentType={'password'}

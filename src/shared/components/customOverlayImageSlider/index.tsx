@@ -12,21 +12,28 @@ import {PHOTO_URL} from '@utils/endpoints';
 import RenderImage from '@components/renderImage';
 //
 interface Props {
-  images: [] | any;
+  files: [] | any;
   visible: boolean;
   toggleOverlay: any;
 }
 
 const CustomOverlayImageSlider = ({
-  images,
+  files,
   visible,
   toggleOverlay,
 }: Partial<Props>) => {
   const listItem = (item: any) => {
-    return <RenderImage item={item?.item} imageStyles={styles.image} />;
+    return (
+      <RenderImage
+        item={item?.item?.link}
+        isVideo={item?.item?.type === 'video'}
+        imageStyles={styles.image}
+        videoStyles={styles.video}
+      />
+    );
   };
   const [active, setActive] = useState(0);
-  const [total, setTotal] = useState(images?.length);
+  const [total, setTotal] = useState(files?.length);
 
   const change = (nativeEvent: any) => {
     if (nativeEvent) {
@@ -55,7 +62,7 @@ const CustomOverlayImageSlider = ({
           />
           <View style={[GST.FLEX, styles.listContainer]}>
             <FlatList
-              data={images}
+              data={files}
               renderItem={listItem}
               horizontal
               showsHorizontalScrollIndicator={false}
