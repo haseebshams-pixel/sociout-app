@@ -9,12 +9,14 @@ interface Props {
   onPress: any;
   isShare: boolean;
   isLocal: boolean;
+  focus: boolean;
 }
 const CustomImageSlider = ({
   files,
   onPress,
   isShare,
   isLocal,
+  focus,
 }: Partial<Props>) => {
   const [active, setActive] = useState(0);
 
@@ -39,11 +41,13 @@ const CustomImageSlider = ({
         {files.map((e: any, index: number) => (
           <TouchableWithoutFeedback onPress={onPress} key={index}>
             <RenderImage
+              focus={focus}
+              activeIndex={active}
               isLocal={isLocal}
               item={isLocal ? e?.uri : e?.link}
-              key={index}
+              index={index}
               isShare={isShare}
-              isVideo={e?.type === 'video'}
+              isVideo={isLocal ? e?.type === 'video/mp4' : e?.type === 'video'}
               imageStyles={styles.wrapImage}
               videoStyles={styles.wrapVideo}
             />

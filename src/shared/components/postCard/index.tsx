@@ -32,6 +32,7 @@ import {PHOTO_URL} from '@utils/endpoints';
 import {ROUTES} from '@utils/routes';
 import CustomOptions from '@components/customOption';
 import {setPostsReducer} from '@redux/reducers/postsSlice';
+import CommentsModal from '@components/commentModal';
 
 //
 interface Props {
@@ -46,6 +47,7 @@ interface Props {
         images: [];
         videos: [];
         postedBy: string;
+        postUser: [{avatar: string; firstname: string; lastname: string}];
         date: string;
         isShared: boolean;
         likeId: string;
@@ -68,6 +70,7 @@ interface Props {
             date: string;
           },
         ];
+        sharedPostUser: [{avatar: string; firstname: string; lastname: string}];
       },
     ];
     CommentObject: [
@@ -81,6 +84,7 @@ interface Props {
     ];
   };
   navigation: any;
+  focus: boolean;
 }
 interface PostUserInterface {
   DOB: string;
@@ -93,19 +97,19 @@ interface PostUserInterface {
   phonenumber: string;
 }
 
-const PostCard = ({item, navigation}: Props) => {
+const PostCard = ({item, navigation, focus}: Props) => {
   const {user, posts} = useSelector((state: any) => state.root);
   const dispatch = useDispatch();
   const [postUser, setPostUser] = useState<Partial<PostUserInterface>>();
-  const [like, setLike] = useState(false);
-  const [likeCount, setLikeCount] = useState(0);
-  const [commentCount, setCommentCount] = useState(0);
+  const [like, setLike] = useState<boolean>(false);
+  const [likeCount, setLikeCount] = useState<number>(0);
+  const [commentCount, setCommentCount] = useState<number>(0);
   const [allcomments, setAllComments] = useState<any>([]);
-  const [userLoader, setUserLoader] = useState(false);
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState<boolean>(false);
   const modalizeRef = useRef<Modalize>(null);
   const [sharePostData, setSharePost] = useState<any>({});
-  const [loader, setLoader] = useState(false);
+  const [loader, setLoader] = useState<boolean>(false);
+  const [showComments, setShowComments] = useState<boolean>(false);
 
   const [allfiles, setAllFiles] = useState<{link: any; type: string}[]>([]);
   const setupFiles = () => {
@@ -187,23 +191,6 @@ const PostCard = ({item, navigation}: Props) => {
           .finally(() => {});
   };
 
-  const fetchUser = async () => {
-    setUserLoader(true);
-    getUser(
-      item?.PostObject[0]?.isShared
-        ? item?.PostObject[0]?.sharedBy
-        : item?.PostObject[0]?.postedBy,
-    )
-      .then(({data}: any) => {
-        setPostUser(data);
-      })
-      .catch(err => {
-        console.log('Error', err);
-      })
-      .finally(() => {
-        setUserLoader(false);
-      });
-  };
   const handleLike = async () => {
     let obj = {
       id: item?.PostObject[0]?._id,
@@ -264,7 +251,6 @@ const PostCard = ({item, navigation}: Props) => {
   };
   useEffect(() => {
     setupFiles();
-    fetchUser();
     postActions();
   }, [item?._id]);
 
@@ -272,41 +258,33 @@ const PostCard = ({item, navigation}: Props) => {
     <View style={[styles.container]}>
       <Pressable
         style={[styles.userInfoContainer]}
-        disabled={userLoader}
         onPress={() =>
           navigation.push(ROUTES.PROFILESTACK, {
-            id: item?.PostObject[0]?.isShared
-              ? item?.PostObject[0]?.sharedBy
-              : item?.PostObject[0]?.postedBy,
+            id: item?.PostObject[0]?.postedBy,
           })
         }>
-        {userLoader ? (
-          <PostUserLoader />
-        ) : (
-          <>
-            <FastImage
-              source={
-                postUser?.avatar
-                  ? {uri: PHOTO_URL + postUser?.avatar}
-                  : profilePlaceholder
-              }
-              style={[styles.userPhoto]}
-            />
-            <View>
-              <CustomText size={13} style={[GST.ml2]}>
-                {postUser?.firstname} {postUser?.lastname}
-              </CustomText>
-              <CustomText style={[GST.ml2]} color={COLORS.GRAY}>
-                {moment(item?.PostObject[0]?.date).fromNow()}
-              </CustomText>
-            </View>
-          </>
-        )}
+        <>
+          <FastImage
+            source={
+              item?.PostObject[0]?.postUser[0]?.avatar
+                ? {uri: PHOTO_URL + item?.PostObject[0]?.postUser[0]?.avatar}
+                : profilePlaceholder
+            }
+            style={[styles.userPhoto]}
+          />
+          <View>
+            <CustomText size={13} style={[GST.ml2]}>
+              {item?.PostObject[0]?.postUser[0]?.firstname}{' '}
+              {item?.PostObject[0]?.postUser[0]?.lastname}
+            </CustomText>
+            <CustomText style={[GST.ml2]} color={COLORS.GRAY}>
+              {moment(item?.PostObject[0]?.date).fromNow()}
+            </CustomText>
+          </View>
+        </>
       </Pressable>
       {item?.PostObject[0]?.isShared ? (
-        <ShareCard item={item} />
-      ) : userLoader ? (
-        <PostContentLoader />
+        <ShareCard item={item} focus={focus} />
       ) : (
         <View>
           {item?.PostObject[0]?.text && (
@@ -318,7 +296,11 @@ const PostCard = ({item, navigation}: Props) => {
           {(item?.PostObject[0]?.images?.length > 0 ||
             item?.PostObject[0]?.videos?.length > 0) && (
             <View style={[GST.CENTER_ALIGN, GST.mb2, {width: WP(100)}]}>
-              <CustomImageSlider files={allfiles} onPress={toggleOverlay} />
+              <CustomImageSlider
+                files={allfiles}
+                onPress={toggleOverlay}
+                focus={focus}
+              />
             </View>
           )}
         </View>
@@ -341,12 +323,14 @@ const PostCard = ({item, navigation}: Props) => {
               {likeCount}
             </CustomText>
           </TouchableWithoutFeedback>
-          <View style={[GST.FLEX_ROW, GST.ml2]}>
+          <TouchableWithoutFeedback
+            onPress={() => setShowComments(true)}
+            style={[GST.FLEX_ROW, GST.ml2]}>
             <MessageSquare stroke={COLORS.BLACK} height={RF(20)} />
             <CustomText style={[GST.ml1]} size={13}>
               {commentCount}
             </CustomText>
-          </View>
+          </TouchableWithoutFeedback>
         </View>
         {!item?.PostObject[0]?.isShared && (
           <TouchableWithoutFeedback
@@ -362,10 +346,7 @@ const PostCard = ({item, navigation}: Props) => {
           </TouchableWithoutFeedback>
         )}
       </View>
-      {user?.user?.id ===
-        (item?.PostObject[0]?.isShared
-          ? item?.PostObject[0]?.sharedBy
-          : item?.PostObject[0]?.postedBy) && (
+      {user?.user?.id === item?.PostObject[0]?.postedBy && (
         <CustomOptions
           options={['Edit', 'Delete', 'Cancel']}
           actions={[editJobHandler, deleteJobHandler]}
@@ -384,6 +365,12 @@ const PostCard = ({item, navigation}: Props) => {
         modalizeRef={modalizeRef}
         handleShare={handleShare}
         sharePostData={sharePostData}
+      />
+      <CommentsModal
+        modalVisible={showComments}
+        setModalVisible={setShowComments}
+        item={item?.CommentObject}
+        postId={item?.PostObject[0]?._id}
       />
       {!!loader && <CustomLoading visible={loader} />}
     </View>

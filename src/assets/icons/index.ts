@@ -21,6 +21,7 @@ const downArrowIcon = require('./down-arrow.png');
 const tickIcon = require('./tick.png');
 const upArrowIcon = require('./uparrow.png');
 const closeIcon = require('./close.png');
+const sendIcon = require('./send.png');
 
 export {
   splashlogo,
@@ -46,4 +47,5 @@ export {
   tickIcon,
   upArrowIcon,
   closeIcon,
+  sendIcon,
 };

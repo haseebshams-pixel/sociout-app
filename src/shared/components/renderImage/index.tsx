@@ -12,15 +12,21 @@ const RenderImage = ({
   videoStyles,
   isVideo,
   isLocal,
+  activeIndex,
+  index,
+  focus,
 }: Partial<any>) => {
   const [loader, setLoader] = useState(true);
+
   return (
     <>
       {isVideo ? (
         <Video
-          paused={true}
+          bufferConfig={{minBufferMs: 1000}}
+          repeat={true}
+          paused={activeIndex === index && focus ? false : true}
           source={{
-            uri: PHOTO_URL + item,
+            uri: isLocal ? item : PHOTO_URL + item,
           }}
           controls
           onError={() => {

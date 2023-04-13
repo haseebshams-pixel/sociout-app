@@ -29,6 +29,7 @@
     "react-native": "0.69.5",
     "react-native-config": "^1.4.6",
     "react-native-content-loader": "^0.1.6",
+    "react-native-create-thumbnail": "^1.6.3",
     "react-native-elements": "^3.4.2",
     "react-native-email-link": "^1.14.3",
     "react-native-fast-image": "^8.6.0",

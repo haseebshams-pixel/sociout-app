@@ -11,4 +11,15 @@ const heightPercentageToDP = (heightPercent: any) => {
   const elemHeight = parseFloat(heightPercent);
   return PixelRatio.roundToNearestPixel((screenHeight * elemHeight) / 100);
 };
-export {widthPercentageToDP as WP, heightPercentageToDP as HP, RFValue as RF};
+const KeyboardHeightToDP = (height: any) => {
+  const screenHeight = Dimensions.get('window').height;
+  const elemHeight = parseFloat(height);
+  return PixelRatio.roundToNearestPixel(screenHeight - elemHeight);
+};
+
+export {
+  widthPercentageToDP as WP,
+  heightPercentageToDP as HP,
+  KeyboardHeightToDP as KP,
+  RFValue as RF,
+};

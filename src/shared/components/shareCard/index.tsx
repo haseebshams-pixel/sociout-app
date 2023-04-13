@@ -28,6 +28,7 @@ interface Props {
         images: [];
         videos: [];
         postedBy: string;
+        postUser: [{avatar: string; firstname: string; lastname: string}];
         date: string;
         isShared: boolean;
         likeId: string;
@@ -41,6 +42,7 @@ interface Props {
             likedBy: [];
           },
         ];
+        sharedPostUser: [{avatar: string; firstname: string; lastname: string}];
         shareComments: [
           {
             _id: string;
@@ -62,6 +64,7 @@ interface Props {
       },
     ];
   };
+  focus: boolean;
 }
 interface PostUserInterface {
   DOB: string;
@@ -74,13 +77,14 @@ interface PostUserInterface {
   phonenumber: string;
 }
 
-const ShareCard = ({item}: Props) => {
+const ShareCard = ({item, focus}: Props) => {
   const [postUser, setPostUser] = useState<Partial<PostUserInterface>>();
   const [userLoader, setUserLoader] = useState(false);
   const [visible, setVisible] = useState(false);
   const [allfiles, setAllFiles] = useState<{link: any; type: string}[]>([]);
   const setupFiles = () => {
     let filesArr: {link: any; type: string}[] = [];
+
     let images = item?.PostObject[0]?.images;
     let videos = item?.PostObject[0]?.videos;
     images.forEach((element: any) => {
@@ -103,22 +107,8 @@ const ShareCard = ({item}: Props) => {
   const toggleOverlay = () => {
     setVisible(!visible);
   };
-  const fetchUser = async () => {
-    setUserLoader(true);
-    getUser(item?.PostObject[0]?.postedBy)
-      .then(({data}: any) => {
-        setPostUser(data);
-      })
-      .catch(err => {
-        console.log('Error', err);
-      })
-      .finally(() => {
-        setUserLoader(false);
-      });
-  };
   useEffect(() => {
     setupFiles();
-    fetchUser();
   }, []);
 
   return (
@@ -130,15 +120,20 @@ const ShareCard = ({item}: Props) => {
           <>
             <FastImage
               source={
-                postUser?.avatar
-                  ? {uri: PHOTO_URL + postUser?.avatar}
+                item?.PostObject[0]?.sharedPostUser[0]?.avatar
+                  ? {
+                      uri:
+                        PHOTO_URL +
+                        item?.PostObject[0]?.sharedPostUser[0]?.avatar,
+                    }
                   : profilePlaceholder
               }
               style={[styles.userPhoto]}
             />
             <View>
               <CustomText size={13} style={[GST.ml2]}>
-                {postUser?.firstname} {postUser?.lastname}
+                {item?.PostObject[0]?.sharedPostUser[0]?.firstname}{' '}
+                {item?.PostObject[0]?.sharedPostUser[0]?.lastname}
               </CustomText>
               <CustomText style={[GST.ml2]} color={COLORS.GRAY}>
                 {moment(item?.PostObject[0]?.oldDate).fromNow()}
@@ -157,12 +152,14 @@ const ShareCard = ({item}: Props) => {
             </CustomText>
           )}
 
-          {item?.PostObject[0]?.images.length > 0 && (
+          {(item?.PostObject[0]?.images?.length > 0 ||
+            item?.PostObject[0]?.videos?.length > 0) && (
             <View style={[GST.CENTER_ALIGN, GST.mt2, GST.mb3, {width: WP(80)}]}>
               <CustomImageSlider
                 files={allfiles}
                 onPress={toggleOverlay}
-                isShare
+                isShare={true}
+                focus={focus}
               />
             </View>
           )}

@@ -1,5 +1,6 @@
-const BASE_URL = 'https://sociout-dev.fly.dev/api/';
-// const BASE_URL = 'http://localhost:8000/api/';
+// const BASE_URL = 'https://sociout-dev.fly.dev/api/';
+const BASE_URL = 'http://localhost:8000/api/';
+// const BASE_URL = 'https://8d60-110-39-152-42.in.ngrok.io/api/';
 
 const PHOTO_URL = 'https://storage.googleapis.com/sociout-data/';
 
@@ -27,6 +28,7 @@ const ENDPOINTS = {
   DELETEPOST: 'posts/',
   DELETESHAREPOST: 'posts/share/',
   CREATEPOST: 'posts/',
+  GETCOMMENTS: 'comments/',
 };
 
 export {BASE_URL, ENDPOINTS, PHOTO_URL};
